@@ -1,0 +1,7 @@
+FROM alpine:latest
+WORKDIR /
+COPY risk-service /risk-service
+RUN chmod +x /risk-service
+EXPOSE 8080
+ENTRYPOINT ["/risk-service"]
+

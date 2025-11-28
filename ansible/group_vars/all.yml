@@ -1,0 +1,32 @@
+# 全局变量
+# 注意：生产环境请修改默认密码！
+
+# MySQL
+mysql_root_password: "CHANGE_ME_mysql_password"
+mysql_image: "mysql:8"
+
+# Keycloak
+keycloak_image: "quay.io/keycloak/keycloak:24.0.4"
+keycloak_admin_user: "admin"
+keycloak_admin_password: "CHANGE_ME_keycloak_password"
+
+# OPA
+opa_image: "openpolicyagent/opa:0.63.0"
+
+# Risk Service
+risk_service_image: "localhost/risk-service:latest"
+risk_service_port: 8080
+
+
+# Web Portal
+web_portal_image: "localhost/web-portal:latest"
+web_portal_port: 8081
+
+web_portal_node_port: 30081
+
+# OIDC (可选)
+oidc_issuer: ""
+oidc_client_id: ""
+oidc_client_secret: ""
+oidc_redirect_url: ""
+

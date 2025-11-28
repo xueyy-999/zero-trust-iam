@@ -1,0 +1,61 @@
+# Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# Go binaries
+services/*/risk-service
+services/*/web-portal
+services/risk-service/risk-service
+services/web-portal/web-portal
+
+# Test files
+test-risk.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Ansible retry files
+*.retry
+
+# Temporary files
+tmp/
+temp/
+
+# Project artifacts
+*.zip
+project.zip
+
+# Temporary documentation (keep only essential docs)
+CHECKLIST.md
+DEPLOYMENT_COMPLETE.md
+DEPLOYMENT_PLAN.md
+DEPLOYMENT_REPORT.md
+DEPLOYMENT_SUCCESS.md
+DEPLOY_QUICK_REF.md
+FILES_MANIFEST.md
+FINAL_REPORT.md
+FINAL_SUBMISSION.md
+NEXT_STEPS.md
+PROJECT_COMPLETE.md
+QUICK_REFERENCE.md
+START_HERE.md
+SUBMISSION_CHECKLIST.md
+TEST_API.md
+THESIS_TITLE.md
