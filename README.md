@@ -1,6 +1,13 @@
 # 零信任 IAM 毕业设计
 
+![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8?style=flat&logo=go)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-1.28+-326CE5?style=flat&logo=kubernetes&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+![Status](https://img.shields.io/badge/Status-Active-success)
+
 基于 Kubernetes 的零信任身份认证与授权系统（Zero-Trust IAM）
+
+> 🎓 **毕业设计项目** - 完整实现基于微服务架构的零信任安全模型
 
 ## 项目简介
 

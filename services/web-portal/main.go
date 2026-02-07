@@ -2,7 +2,10 @@ package main
 
 import (
 	"bytes"
+	"context"
+	"crypto/rand"
 	"embed"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"html/template"
@@ -11,12 +14,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
-
-	"context"
-	"crypto/rand"
-	"encoding/base64"
 	"sync"
+	"time"
 
 	github_oidc "github.com/coreos/go-oidc/v3/oidc"
 	"golang.org/x/oauth2"
@@ -32,6 +31,8 @@ var (
 	riskServiceURL string
 	opaURL         string
 
+	httpClient = &http.Client{Timeout: 5 * time.Second}
+
 	// OIDC (Keycloak)
 	oidcIssuer       string
 	oidcClientID     string
@@ -44,8 +45,8 @@ var (
 
 	sessionsMu sync.Mutex
 	sessions   map[string]*sessionData
-	statesMu  sync.Mutex
-	states    map[string]time.Time
+	statesMu   sync.Mutex
+	states     map[string]time.Time
 )
 
 type ScoreRequest struct {
@@ -53,7 +54,7 @@ type ScoreRequest struct {
 	Roles            []string `json:"roles"`
 	Resource         string   `json:"resource"`
 	Action           string   `json:"action"`
-IP               string   `json:"ip"`
+	IP               string   `json:"ip"`
 	UserAgent        string   `json:"userAgent"`
 	Geo              string   `json:"geo"`
 	TimeISO          string   `json:"time"`
@@ -69,7 +70,6 @@ type sessionData struct {
 	Name  string
 	Email string
 }
-
 
 func main() {
 	var err error
@@ -97,34 +97,35 @@ func main() {
 		port = "8081"
 	}
 
-
-		// OIDC init (optional)
-		oidcIssuer = os.Getenv("OIDC_ISSUER")
-		oidcClientID = os.Getenv("OIDC_CLIENT_ID")
-		oidcClientSecret = os.Getenv("OIDC_CLIENT_SECRET")
-		oidcRedirectURL = os.Getenv("OIDC_REDIRECT_URL")
-		if oidcIssuer != "" && oidcClientID != "" && oidcRedirectURL != "" {
-			ctx := context.Background()
-			provider, err := github_oidc.NewProvider(ctx, oidcIssuer)
-			if err != nil {
-				log.Printf("OIDC disabled: init provider failed: %v", err)
-			} else {
-				oauth2Config = &oauth2.Config{
-					ClientID:     oidcClientID,
-					ClientSecret: oidcClientSecret,
-					Endpoint:     provider.Endpoint(),
-					RedirectURL:  oidcRedirectURL,
-					Scopes:       []string{github_oidc.ScopeOpenID, "profile", "email"},
-				}
-				oidcVerifier = provider.Verifier(&github_oidc.Config{ClientID: oidcClientID})
-				oidcEnabled = true
-				sessions = make(map[string]*sessionData)
-				states = make(map[string]time.Time)
-				log.Printf("OIDC enabled: issuer=%s client_id=%s redirect=%s", oidcIssuer, oidcClientID, oidcRedirectURL)
-			}
+	// OIDC init (optional)
+	oidcIssuer = os.Getenv("OIDC_ISSUER")
+	oidcClientID = os.Getenv("OIDC_CLIENT_ID")
+	oidcClientSecret = os.Getenv("OIDC_CLIENT_SECRET")
+	oidcRedirectURL = os.Getenv("OIDC_REDIRECT_URL")
+	if oidcIssuer != "" && oidcClientID != "" && oidcRedirectURL != "" {
+		ctx := context.Background()
+		provider, err := github_oidc.NewProvider(ctx, oidcIssuer)
+		if err != nil {
+			log.Printf("OIDC disabled: init provider failed: %v", err)
 		} else {
-			log.Printf("OIDC disabled: missing envs OIDC_ISSUER/CLIENT_ID/REDIRECT_URL")
+			oauth2Config = &oauth2.Config{
+				ClientID:     oidcClientID,
+				ClientSecret: oidcClientSecret,
+				Endpoint:     provider.Endpoint(),
+				RedirectURL:  oidcRedirectURL,
+				Scopes:       []string{github_oidc.ScopeOpenID, "profile", "email"},
+			}
+			oidcVerifier = provider.Verifier(&github_oidc.Config{ClientID: oidcClientID})
+			oidcEnabled = true
+			sessions = make(map[string]*sessionData)
+			states = make(map[string]time.Time)
+			// Start cleanup goroutine to prevent memory leaks
+			go cleanupExpiredStates()
+			log.Printf("OIDC enabled: issuer=%s client_id=%s redirect=%s", oidcIssuer, oidcClientID, oidcRedirectURL)
 		}
+	} else {
+		log.Printf("OIDC disabled: missing envs OIDC_ISSUER/CLIENT_ID/REDIRECT_URL")
+	}
 
 	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/", indexHandler)
@@ -136,7 +137,15 @@ func main() {
 
 	addr := ":" + port
 	log.Printf("web-portal listening on %s (risk=%s, opa=%s)", addr, riskServiceURL, opaURL)
-	log.Fatal(http.ListenAndServe(addr, nil))
+	srv := &http.Server{
+		Addr:              addr,
+		Handler:           nil,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       60 * time.Second,
+	}
+	log.Fatal(srv.ListenAndServe())
 }
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
@@ -226,7 +235,12 @@ func checkHandler(w http.ResponseWriter, r *http.Request) {
 
 func callRiskService(req ScoreRequest) (*ScoreResponse, error) {
 	b, _ := json.Marshal(req)
-	resp, err := http.Post(riskServiceURL, "application/json", bytes.NewReader(b))
+	hreq, err := http.NewRequestWithContext(context.Background(), http.MethodPost, riskServiceURL, bytes.NewReader(b))
+	if err != nil {
+		return nil, err
+	}
+	hreq.Header.Set("Content-Type", "application/json")
+	resp, err := httpClient.Do(hreq)
 	if err != nil {
 		return nil, err
 	}
@@ -257,7 +271,12 @@ func callOPA(req ScoreRequest, score int) (bool, string) {
 		"score":    score,
 	}
 	b, _ := json.Marshal(opaQuery{Input: input})
-	resp, err := http.Post(opaURL+"/v1/data/authz/allow", "application/json", bytes.NewReader(b))
+	hreq, err := http.NewRequestWithContext(context.Background(), http.MethodPost, opaURL+"/v1/data/authz/allow", bytes.NewReader(b))
+	if err != nil {
+		return false, err.Error()
+	}
+	hreq.Header.Set("Content-Type", "application/json")
+	resp, err := httpClient.Do(hreq)
 	if err != nil {
 		return false, err.Error()
 	}
@@ -275,7 +294,6 @@ func callOPA(req ScoreRequest, score int) (bool, string) {
 func fmtErrorStatus(svc string, code int) string {
 	return svc + " responded with status " + strconv.Itoa(code)
 }
-
 
 // --- OIDC helpers and handlers ---
 func randToken() string {
@@ -321,10 +339,10 @@ func clearSession(w http.ResponseWriter, r *http.Request) {
 		sessionsMu.Unlock()
 	}
 	http.SetCookie(w, &http.Cookie{
-		Name:   "sid",
-		Value:  "",
-		Path:   "/",
-		MaxAge: -1,
+		Name:    "sid",
+		Value:   "",
+		Path:    "/",
+		MaxAge:  -1,
 		Expires: time.Unix(0, 0),
 	})
 }
@@ -395,4 +413,20 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	clearSession(w, r)
 	http.Redirect(w, r, "/", http.StatusFound)
+}
+
+// cleanupExpiredStates periodically removes expired state tokens to prevent memory leaks
+func cleanupExpiredStates() {
+	ticker := time.NewTicker(5 * time.Minute)
+	defer ticker.Stop()
+	for range ticker.C {
+		now := time.Now()
+		statesMu.Lock()
+		for state, expiry := range states {
+			if now.After(expiry) {
+				delete(states, state)
+			}
+		}
+		statesMu.Unlock()
+	}
 }

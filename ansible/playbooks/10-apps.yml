@@ -9,7 +9,7 @@
 
     - name: Create OPA policy configmap
       shell: |
-        kubectl -n security create configmap opa-policies --from-file=opa/policies -o yaml --dry-run=client | kubectl apply -f -
+        kubectl -n security create configmap opa-policies --from-file={{ playbook_dir }}/../../opa/policies -o yaml --dry-run=client | kubectl apply -f -
 
     - name: Create MySQL data directory
       file:

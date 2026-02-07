@@ -15,12 +15,12 @@ WEB_BIN="services/web-portal/web-portal"
 
 if [ ! -f "$RISK_BIN" ]; then
     echo "[构建] risk-service..."
-    (cd services/risk-service && go build -v -o risk-service main.go)
+    (cd services/risk-service && go build -v -o risk-service .)
 fi
 
 if [ ! -f "$WEB_BIN" ]; then
     echo "[构建] web-portal..."
-    (cd services/web-portal && go build -v -o web-portal main.go)
+    (cd services/web-portal && go build -v -o web-portal .)
 fi
 
 echo "[启动] risk-service (端口 8080)..."

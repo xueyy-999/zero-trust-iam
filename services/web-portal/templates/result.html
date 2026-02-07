@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>评估结果 - 零信任IAM系统</title>
   <style>
+    :root {
+      --primary-color: #0f172a;
+      --primary-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --accent-color: #3b82f6;
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --text-main: #334155;
+      --text-light: #64748b;
+      --border-color: #e2e8f0;
+      --success-color: #10b981;
+      --risk-color: #ef4444;
+      --warning-color: #f59e0b;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -12,424 +26,377 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
       min-height: 100vh;
-      padding: 20px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
+      padding: 40px 20px;
     }
 
     .container {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
       max-width: 900px;
       width: 100%;
       overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.5);
     }
 
     .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--primary-gradient);
       color: white;
-      padding: 30px;
+      padding: 40px;
       text-align: center;
+      position: relative;
     }
 
     .header h1 {
       font-size: 28px;
-      font-weight: 600;
+      font-weight: 700;
       margin-bottom: 8px;
     }
 
     .header p {
-      font-size: 14px;
-      opacity: 0.9;
+      font-size: 15px;
+      color: #94a3b8;
     }
 
     .content {
       padding: 40px;
     }
 
-    .result-card {
-      background: {{if .Allow}}#d4edda{{else}}#f8d7da{{end}};
-      border: 2px solid {{if .Allow}}#28a745{{else}}#dc3545{{end}};
-      border-radius: 12px;
-      padding: 30px;
-      margin-bottom: 30px;
+    .status-card {
+      border-radius: 16px;
+      padding: 32px;
       text-align: center;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .result-icon {
-      font-size: 64px;
-      margin-bottom: 15px;
+    .status-allow {
+      background: #ecfdf5;
+      border: 2px solid var(--success-color);
+      color: #064e3b;
     }
 
-    .result-title {
+    .status-deny {
+      background: #fef2f2;
+      border: 2px solid var(--risk-color);
+      color: #7f1d1d;
+    }
+
+    .status-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .status-title {
       font-size: 32px;
-      font-weight: 700;
-      color: {{if .Allow}}#28a745{{else}}#dc3545{{end}};
-      margin-bottom: 10px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
     }
 
-    .result-subtitle {
+    .status-desc {
       font-size: 16px;
-      color: #555;
-    }
-
-    .user-info {
-      background: #f8f9fa;
-      padding: 15px 20px;
-      border-radius: 8px;
-      margin-bottom: 30px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .user-info strong {
-      color: #667eea;
+      opacity: 0.9;
     }
 
     .metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
     }
 
     .metric-card {
-      background: #f8f9fa;
-      padding: 20px;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
       border-radius: 12px;
+      padding: 24px;
       text-align: center;
-      border: 2px solid #e0e0e0;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .metric-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     }
 
     .metric-label {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 8px;
-      font-weight: 500;
+      font-size: 13px;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      font-weight: 600;
     }
 
     .metric-value {
-      font-size: 32px;
-      font-weight: 700;
-      color: #333;
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 8px;
     }
 
-    .score-bar {
-      background: #e0e0e0;
-      height: 30px;
-      border-radius: 15px;
+    .risk-score-container {
+      margin-top: 16px;
+    }
+
+    .progress-bar-bg {
+      background: #e2e8f0;
+      height: 12px;
+      border-radius: 999px;
       overflow: hidden;
-      margin-top: 10px;
-      position: relative;
     }
 
-    .score-fill {
+    .progress-bar-fill {
       height: 100%;
-      background: linear-gradient(90deg,
-        {{if lt .Score 30}}#28a745{{else if lt .Score 70}}#ffc107{{else}}#dc3545{{end}} 0%,
-        {{if lt .Score 30}}#20c997{{else if lt .Score 70}}#ff9800{{else}}#c82333{{end}} 100%);
-      width: {{.Score}}%;
       transition: width 1s ease-out;
+      border-radius: 999px;
+    }
+
+    .detail-section {
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    .section-header {
+      background: #f8fafc;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border-color);
+      font-weight: 600;
+      color: var(--text-main);
       display: flex;
       align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 600;
+      gap: 8px;
+    }
+
+    .grid-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border-color); /* Creates border lines */
+    }
+
+    .detail-item {
+      background: #fff;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .detail-key {
+      font-size: 12px;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .detail-val {
       font-size: 14px;
-    }
-
-    .reasons-section {
-      margin-bottom: 30px;
-    }
-
-    .section-title {
-      font-size: 18px;
       font-weight: 600;
-      color: #333;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #667eea;
+      color: var(--text-main);
+      font-family: monospace;
+      word-break: break-all;
     }
 
     .reasons-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
+      padding: 24px;
     }
 
     .reason-badge {
-      background: #fff3cd;
-      color: #856404;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 13px;
-      border: 1px solid #ffc107;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-    }
-
-    .details-section {
-      background: #f8f9fa;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
-
-    .details-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-    }
-
-    .detail-item {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .detail-label {
-      font-size: 12px;
-      color: #666;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 13px;
       font-weight: 500;
-      text-transform: uppercase;
+      border: 1px solid transparent;
     }
 
-    .detail-value {
-      font-size: 14px;
-      color: #333;
-      font-family: 'Courier New', monospace;
-      background: white;
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: 1px solid #e0e0e0;
+    .reason-warning {
+      background: #fffbeb;
+      color: #92400e;
+      border-color: #fcd34d;
     }
 
-    .error-box {
-      background: #f8d7da;
-      border-left: 4px solid #dc3545;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-
-    .error-box p {
-      color: #721c24;
-      font-size: 14px;
-    }
-
-    .action-buttons {
+    .action-bar {
       display: flex;
-      gap: 15px;
+      gap: 16px;
       justify-content: center;
-      margin-top: 30px;
+      margin-top: 40px;
     }
 
     .btn {
-      padding: 12px 32px;
-      border-radius: 8px;
+      padding: 14px 32px;
+      border-radius: 12px;
       font-size: 16px;
       font-weight: 600;
       text-decoration: none;
-      transition: all 0.3s;
-      display: inline-block;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--primary-gradient);
       color: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
 
-    .btn-secondary {
-      background: white;
-      color: #667eea;
-      border: 2px solid #667eea;
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--border-color);
+      color: var(--text-main);
     }
 
-    .btn-secondary:hover {
-      background: #667eea;
-      color: white;
+    .btn-outline:hover {
+      border-color: var(--text-main);
+      background: #f8fafc;
     }
 
-    .risk-level {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      margin-left: 10px;
-    }
+    /* Dynamic Colors based on Score/Allow */
+    .color-success { color: var(--success-color); }
+    .color-danger { color: var(--risk-color); }
+    .color-warning { color: var(--warning-color); }
 
-    .risk-low {
-      background: #d4edda;
-      color: #155724;
-    }
+    .bg-success { background: var(--success-color); }
+    .bg-danger { background: var(--risk-color); }
+    .bg-warning { background: var(--warning-color); }
 
-    .risk-medium {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    .risk-high {
-      background: #f8d7da;
-      color: #721c24;
-    }
-
-    @media (max-width: 768px) {
-      .content {
-        padding: 20px;
-      }
-
-      .header {
-        padding: 20px;
-      }
-
-      .metrics-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .action-buttons {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
+    @media (max-width: 640px) {
+      .metrics-grid { grid-template-columns: 1fr; }
+      .action-bar { flex-direction: column; }
+      .btn { width: 100%; text-align: center; }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>📊 评估结果</h1>
-      <p>零信任访问控制评估报告</p>
+      <h1>📊 评估报告</h1>
+      <p>ID: {{.Req.UserID}} | Time: {{.Req.TimeISO}}</p>
     </div>
 
     <div class="content">
-      {{if .LoggedIn}}{{if .User}}
-      <div class="user-info">
-        <span>👤</span>
-        <span>用户：<strong>{{.User.Name}}</strong>（{{.User.Email}}）</span>
+      <!-- 结果卡片 -->
+      <div class="status-card {{if .Allow}}status-allow{{else}}status-deny{{end}}">
+        <div class="status-icon">{{if .Allow}}✅{{else}}🚫{{end}}</div>
+        <div class="status-title">{{if .Allow}}ACCESS GRANTED{{else}}ACCESS DENIED{{end}}</div>
+        <div class="status-desc">
+          {{if .Allow}}
+            零信任策略验证通过，准予访问资源。
+          {{else}}
+            {{if .OPAErr}}
+              策略引擎执行错误: {{.OPAErr}}
+            {{else}}
+              基于当前风险评分与策略，拒绝访问请求。
+            {{end}}
+          {{end}}
+        </div>
       </div>
-      {{end}}{{else}}{{if .OIDC}}
-      <div class="user-info">
-        <span>⚠️</span>
-        <span>未登录 · <a href="/login" style="color: #667eea; text-decoration: underline;">登录以携带用户身份</a></span>
-      </div>
-      {{end}}{{end}}
 
-      <div class="result-card">
-        <div class="result-icon">{{if .Allow}}✅{{else}}🚫{{end}}</div>
-        <div class="result-title">{{if .Allow}}访问允许{{else}}访问拒绝{{end}}</div>
-        <div class="result-subtitle">{{if .Allow}}该请求已通过零信任安全验证{{else}}该请求未通过零信任安全验证{{end}}</div>
-      </div>
-
-      {{if .OPAErr}}
-      <div class="error-box">
-        <p><strong>⚠️ OPA 错误：</strong>{{.OPAErr}}</p>
-      </div>
-      {{end}}
-
+      <!-- 核心指标 -->
       <div class="metrics-grid">
+        <!-- 决策结果 -->
         <div class="metric-card">
-          <div class="metric-label">授权决策</div>
-          <div class="metric-value" style="color: {{if .Allow}}#28a745{{else}}#dc3545{{end}}">
+          <div class="metric-label">Policy Decision</div>
+          <div class="metric-value {{if .Allow}}color-success{{else}}color-danger{{end}}">
             {{if .Allow}}ALLOW{{else}}DENY{{end}}
           </div>
+          <div style="font-size: 13px; color: #64748b;">OPA Policy Engine</div>
         </div>
 
+        <!-- 风险评分 -->
         <div class="metric-card">
-          <div class="metric-label">风险分数</div>
-          <div class="metric-value" style="color: {{if lt .Score 30}}#28a745{{else if lt .Score 70}}#ffc107{{else}}#dc3545{{end}}">
-            {{.Score}}
-            <span class="risk-level {{if lt .Score 30}}risk-low{{else if lt .Score 70}}risk-medium{{else}}risk-high{{end}}">
-              {{if lt .Score 30}}低风险{{else if lt .Score 70}}中风险{{else}}高风险{{end}}
-            </span>
+          <div class="metric-label">Risk Score</div>
+          <div class="metric-value {{if lt .Score 30}}color-success{{else if lt .Score 70}}color-warning{{else}}color-danger{{end}}">
+            {{.Score}}<span style="font-size: 16px; color: #94a3b8; font-weight: 400;">/100</span>
           </div>
-          <div class="score-bar">
-            <div class="score-fill">{{.Score}}%</div>
+          
+          <div class="risk-score-container">
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill {{if lt .Score 30}}bg-success{{else if lt .Score 70}}bg-warning{{else}}bg-danger{{end}}" 
+                   style="width: {{.Score}}%;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 11px; margin-top: 6px; color: #64748b;">
+              <span>Safe (0)</span>
+              <span>Critical (100)</span>
+            </div>
           </div>
         </div>
       </div>
 
+      <!-- 风险详情 -->
       {{if .Reasons}}
-      <div class="reasons-section">
-        <div class="section-title">🔍 风险因素</div>
+      <div class="detail-section">
+        <div class="section-header">
+          <span>⚠️</span> 风险因素检测 (Risk Factors)
+        </div>
         <div class="reasons-list">
           {{range .Reasons}}
-          <span class="reason-badge">
-            ⚠️
-            {{if eq . "many_failed_logins"}}多次登录失败
-            {{else if eq . "geo_anomaly"}}地理位置异常
-            {{else if eq . "privileged_action"}}特权操作
-            {{else if eq . "missing_ua"}}缺失User-Agent
-            {{else if eq . "night_time"}}夜间访问
-            {{else}}{{.}}{{end}}
+          <span class="reason-badge reason-warning">
+            🔥 {{.}}
           </span>
           {{end}}
         </div>
       </div>
       {{end}}
 
-      <div class="section-title">📋 请求详情</div>
-      <div class="details-section">
-        <div class="details-grid">
+      <!-- 上下文详情 -->
+      <div class="detail-section">
+        <div class="section-header">
+          <span>📝</span> 访问上下文详情 (Context Attributes)
+        </div>
+        <div class="grid-details">
           <div class="detail-item">
-            <div class="detail-label">用户ID</div>
-            <div class="detail-value">{{.Req.UserID}}</div>
+            <div class="detail-key">Subject (Who)</div>
+            <div class="detail-val">{{.Req.UserID}}</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">角色</div>
-            <div class="detail-value">{{range $i, $r := .Req.Roles}}{{if $i}}, {{end}}{{$r}}{{end}}</div>
+            <div class="detail-key">Role</div>
+            <div class="detail-val">{{range $i, $r := .Req.Roles}}{{if $i}}, {{end}}{{$r}}{{end}}</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">资源</div>
-            <div class="detail-value">{{.Req.Resource}}</div>
+            <div class="detail-key">Resource (What)</div>
+            <div class="detail-val">{{.Req.Resource}}</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">操作</div>
-            <div class="detail-value">{{.Req.Action}}</div>
+            <div class="detail-key">Action</div>
+            <div class="detail-val">{{.Req.Action}}</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">IP地址</div>
-            <div class="detail-value">{{.Req.IP}}</div>
+            <div class="detail-key">Source IP</div>
+            <div class="detail-val">{{.Req.IP}}</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">地理位置</div>
-            <div class="detail-value">{{if .Req.Geo}}{{.Req.Geo}}{{else}}未知{{end}}</div>
+            <div class="detail-key">Geo Location</div>
+            <div class="detail-val">{{if .Req.Geo}}{{.Req.Geo}}{{else}}N/A{{end}}</div>
           </div>
           <div class="detail-item">
-            <div class="detail-label">失败登录次数</div>
-            <div class="detail-value">{{.Req.FailedLoginCount}}</div>
-          </div>
-          <div class="detail-item">
-            <div class="detail-label">访问时间</div>
-            <div class="detail-value">{{.Req.TimeISO}}</div>
+            <div class="detail-key">Device / UA</div>
+            <div class="detail-val" style="font-size: 11px;">{{.Req.UserAgent}}</div>
           </div>
         </div>
       </div>
 
-      <div class="action-buttons">
-        <a href="/" class="btn btn-primary">🔄 重新评估</a>
+      <div class="action-bar">
+        <a href="/" class="btn btn-primary">🔄 发起新的评估</a>
         {{if not .LoggedIn}}{{if .OIDC}}
-        <a href="/login" class="btn btn-secondary">🔑 登录</a>
+        <a href="/login" class="btn btn-outline">👤 身份登录</a>
         {{end}}{{end}}
       </div>
     </div>
