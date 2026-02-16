@@ -40,6 +40,7 @@ type Metrics struct {
 
 var (
 	auditLogger *AuditLogger
+	appLogger   *Logger // 全局应用日志记录器
 	metrics     Metrics
 )
 
@@ -97,6 +98,7 @@ func computeScore(req ScoreRequest) (int, []string) {
 }
 
 func scoreHandler(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
 	atomic.AddInt64(&metrics.TotalRequests, 1)
 
 	if r.Method != http.MethodPost {
@@ -123,6 +125,9 @@ func scoreHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write([]byte("invalid json"))
 		atomic.AddInt64(&metrics.FailedRequests, 1)
+		if appLogger != nil {
+			appLogger.Warn("failed to decode request: %v", err)
+		}
 		return
 	}
 
@@ -158,6 +163,11 @@ func scoreHandler(w http.ResponseWriter, r *http.Request) {
 		}()
 	}
 
+	// Log request details using the appLogger
+	if appLogger != nil {
+		appLogger.LogRequest(req.UserID, req.Action, req.Resource, req.IP, score, time.Since(start))
+	}
+
 	atomic.AddInt64(&metrics.SuccessRequests, 1)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(ScoreResponse{Score: score, Reasons: reasons})
@@ -185,6 +195,14 @@ func metricsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Initialize Logger
+	logLevel := os.Getenv("LOG_LEVEL")
+	if logLevel == "" {
+		logLevel = "INFO"
+	}
+	appLogger = NewLogger(logLevel)
+	appLogger.Info("logger initialized at level %s", logLevel)
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -199,20 +217,23 @@ func main() {
 		var err error
 		auditLogger, err = NewAuditLogger(dsn)
 		if err != nil {
-			log.Printf("WARNING: failed to initialize audit logger: %v", err)
+			appLogger.Warn("failed to initialize audit logger: %v", err)
 		} else {
 			defer auditLogger.Close()
-			log.Println("audit logging enabled")
+			// Success message is logged inside NewAuditLogger if we update it,
+			// or we can log here.
+			appLogger.Info("audit logging enabled")
 		}
 	} else {
-		log.Println("audit logging disabled (no MYSQL_DSN)")
+		appLogger.Info("audit logging disabled (no MYSQL_DSN)")
 	}
 
 	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/score", scoreHandler)
 	http.HandleFunc("/metrics", metricsHandler)
 	addr := "0.0.0.0:" + port
-	log.Printf("risk-service listening on %s", addr)
+	appLogger.Info("risk-service listening on %s", addr)
+
 	srv := &http.Server{
 		Addr:              addr,
 		Handler:           nil,
@@ -221,5 +242,6 @@ func main() {
 		WriteTimeout:      10 * time.Second,
 		IdleTimeout:       60 * time.Second,
 	}
+	// Use standard log.Fatal for server crash as it calls os.Exit(1)
 	log.Fatal(srv.ListenAndServe())
 }

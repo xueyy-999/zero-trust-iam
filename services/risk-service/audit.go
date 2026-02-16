@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"log"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -49,7 +48,9 @@ func NewAuditLogger(dsn string) (*AuditLogger, error) {
 		return nil, err
 	}
 
-	log.Println("audit logger initialized successfully")
+	if appLogger != nil {
+		appLogger.Info("audit logger initialized successfully")
+	}
 	return &AuditLogger{db: db}, nil
 }
 
@@ -99,7 +100,9 @@ func (a *AuditLogger) Log(entry AuditLog) error {
 	)
 
 	if err != nil {
-		log.Printf("failed to write audit log: %v", err)
+		if appLogger != nil {
+			appLogger.Error("failed to write audit log: %v", err)
+		}
 		return err
 	}
 
