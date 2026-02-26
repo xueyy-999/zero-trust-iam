@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1000">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #1e293b; }
+      .subtitle { font: 16px sans-serif; fill: #475569; }
+      .step-title { font: bold 14px sans-serif; fill: #1e293b; }
+      .step-text { font: 12px sans-serif; fill: #334155; }
+      .actor-title { font: bold 16px sans-serif; fill: #1e293b; }
+      .label { font: 12px sans-serif; fill: #64748b; }
+      .arrow { stroke: #3b82f6; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-return { stroke: #10b981; stroke-width: 2; fill: none; marker-end: url(#arrowhead-return); stroke-dasharray: 5,5; }
+      .arrow-async { stroke: #f59e0b; stroke-width: 2; fill: none; marker-end: url(#arrowhead-async); stroke-dasharray: 3,3; }
+      .arrow-label { font: 11px sans-serif; fill: #3b82f6; }
+      .arrow-label-return { font: 11px sans-serif; fill: #10b981; }
+      .arrow-label-async { font: 11px sans-serif; fill: #f59e0b; }
+      .step-box { fill: #f1f5f9; stroke: #cbd5e1; stroke-width: 2; rx: 6; }
+      .actor-box { fill: #e0e7ff; stroke: #6366f1; stroke-width: 2; rx: 8; }
+      .decision-box { fill: #fef3c7; stroke: #f59e0b; stroke-width: 2; }
+      .result-success { fill: #d1fae5; stroke: #10b981; stroke-width: 2; rx: 6; }
+      .result-deny { fill: #fee2e2; stroke: #ef4444; stroke-width: 2; rx: 6; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#3b82f6" />
+    </marker>
+    <marker id="arrowhead-return" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#10b981" />
+    </marker>
+    <marker id="arrowhead-async" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#f59e0b" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="700" y="40" text-anchor="middle" class="title">零信任IAM系统 - 模块交互流程图</text>
+  <text x="700" y="65" text-anchor="middle" class="subtitle">Request Flow & Authorization Decision Process</text>
+
+  <!-- Actors (Vertical Lifelines) -->
+  <g id="actors">
+    <!-- User -->
+    <rect x="50" y="100" width="120" height="60" class="actor-box"/>
+    <text x="110" y="135" text-anchor="middle" class="actor-title">用户</text>
+    <line x1="110" y1="160" x2="110" y2="900" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="5,5"/>
+
+    <!-- Web Portal -->
+    <rect x="250" y="100" width="140" height="60" class="actor-box"/>
+    <text x="320" y="125" text-anchor="middle" class="actor-title">Web Portal</text>
+    <text x="320" y="145" text-anchor="middle" class="step-text">(Go, Port 8081)</text>
+    <line x1="320" y1="160" x2="320" y2="900" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="5,5"/>
+
+    <!-- Risk Service -->
+    <rect x="470" y="100" width="160" height="60" class="actor-box"/>
+    <text x="550" y="125" text-anchor="middle" class="actor-title">Risk Service</text>
+    <text x="550" y="145" text-anchor="middle" class="step-text">(Go, Port 8080)</text>
+    <line x1="550" y1="160" x2="550" y2="900" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="5,5"/>
+
+    <!-- OPA -->
+    <rect x="710" y="100" width="140" height="60" class="actor-box"/>
+    <text x="780" y="125" text-anchor="middle" class="actor-title">OPA Engine</text>
+    <text x="780" y="145" text-anchor="middle" class="step-text">(Rego, Port 8181)</text>
+    <line x1="780" y1="160" x2="780" y2="900" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="5,5"/>
+
+    <!-- Audit Logger -->
+    <rect x="930" y="100" width="150" height="60" class="actor-box"/>
+    <text x="1005" y="125" text-anchor="middle" class="actor-title">Audit Logger</text>
+    <text x="1005" y="145" text-anchor="middle" class="step-text">(Go + MySQL)</text>
+    <line x1="1005" y1="160" x2="1005" y2="900" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="5,5"/>
+
+    <!-- MySQL -->
+    <rect x="1160" y="100" width="120" height="60" class="actor-box"/>
+    <text x="1220" y="135" text-anchor="middle" class="actor-title">MySQL</text>
+    <line x1="1220" y1="160" x2="1220" y2="900" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="5,5"/>
+  </g>
+
+  <!-- Interaction Flow -->
+  <g id="flow">
+    <!-- Step 1: User submits form -->
+    <path d="M 110 200 L 320 200" class="arrow"/>
+    <text x="180" y="190" class="arrow-label">1. 提交评估表单</text>
+    <rect x="130" y="205" width="160" height="50" class="step-box"/>
+    <text x="210" y="225" text-anchor="middle" class="step-text">userId, roles, resource,</text>
+    <text x="210" y="240" text-anchor="middle" class="step-text">action, ip, geo, userAgent,</text>
+    <text x="210" y="255" text-anchor="middle" class="step-text">time, failedLoginCount</text>
+
+    <!-- Step 2: Web Portal calls Risk Service -->
+    <path d="M 320 280 L 550 280" class="arrow"/>
+    <text x="400" y="270" class="arrow-label">2. POST /score</text>
+    <rect x="340" y="285" width="180" height="35" class="step-box"/>
+    <text x="430" y="305" text-anchor="middle" class="step-text">JSON请求体</text>
+    <text x="430" y="320" text-anchor="middle" class="step-text">(ScoreRequest)</text>
+
+    <!-- Step 3: Risk Service computes score -->
+    <rect x="470" y="340" width="160" height="100" class="decision-box"/>
+    <text x="550" y="365" text-anchor="middle" class="step-title">3. 风险评分计算</text>
+    <text x="550" y="385" text-anchor="middle" class="step-text">• 失败登录次数 (20-40分)</text>
+    <text x="550" y="400" text-anchor="middle" class="step-text">• 地理位置异常 (20分)</text>
+    <text x="550" y="415" text-anchor="middle" class="step-text">• 特权操作 (20分)</text>
+    <text x="550" y="430" text-anchor="middle" class="step-text">• User-Agent缺失 (10分)</text>
+    <text x="550" y="445" text-anchor="middle" class="step-text">• 非工作时间 (10分)</text>
+
+    <!-- Step 4: Risk Service returns score -->
+    <path d="M 550 460 L 320 460" class="arrow-return"/>
+    <text x="400" y="450" class="arrow-label-return">4. 返回风险分数</text>
+    <rect x="340" y="465" width="180" height="35" class="step-box"/>
+    <text x="430" y="485" text-anchor="middle" class="step-text">{"score": 0-100,</text>
+    <text x="430" y="500" text-anchor="middle" class="step-text">"reasons": [...]}</text>
+
+    <!-- Step 5: Web Portal calls OPA -->
+    <path d="M 320 520 L 780 520" class="arrow"/>
+    <text x="500" y="510" class="arrow-label">5. 授权决策查询</text>
+    <rect x="400" y="525" width="280" height="50" class="step-box"/>
+    <text x="540" y="545" text-anchor="middle" class="step-text">POST /v1/data/authz/allow</text>
+    <text x="540" y="560" text-anchor="middle" class="step-text">{"input": {roles, resource, action, score}}</text>
+
+    <!-- Step 6: OPA evaluates policy -->
+    <rect x="710" y="590" width="140" height="80" class="decision-box"/>
+    <text x="780" y="615" text-anchor="middle" class="step-title">6. 策略评估</text>
+    <text x="780" y="635" text-anchor="middle" class="step-text">• 检查角色权限</text>
+    <text x="780" y="650" text-anchor="middle" class="step-text">• 检查资源访问</text>
+    <text x="780" y="665" text-anchor="middle" class="step-text">• 检查风险分数</text>
+
+    <!-- Step 7: OPA returns decision -->
+    <path d="M 780 690 L 320 690" class="arrow-return"/>
+    <text x="500" y="680" class="arrow-label-return">7. 返回授权结果</text>
+    <rect x="450" y="695" width="180" height="35" class="step-box"/>
+    <text x="540" y="715" text-anchor="middle" class="step-text">{"result": true/false}</text>
+
+    <!-- Step 8: Async audit logging (from Risk Service) -->
+    <path d="M 550 340 L 1005 340" class="arrow-async"/>
+    <text x="720" y="330" class="arrow-label-async">8. 异步审计日志</text>
+    <rect x="650" y="345" width="280" height="50" class="step-box"/>
+    <text x="790" y="365" text-anchor="middle" class="step-text">goroutine: auditLogger.Log()</text>
+    <text x="790" y="380" text-anchor="middle" class="step-text">(不阻塞主流程)</text>
+
+    <!-- Step 9: Audit Logger writes to MySQL -->
+    <path d="M 1005 400 L 1220 400" class="arrow-async"/>
+    <text x="1080" y="390" class="arrow-label-async">9. 持久化</text>
+    <rect x="1030" y="405" width="160" height="50" class="step-box"/>
+    <text x="1110" y="425" text-anchor="middle" class="step-text">INSERT INTO</text>
+    <text x="1110" y="440" text-anchor="middle" class="step-text">audit_logs</text>
+
+    <!-- Step 10: Web Portal returns result to user -->
+    <path d="M 320 750 L 110 750" class="arrow-return"/>
+    <text x="180" y="740" class="arrow-label-return">10. 显示结果页面</text>
+
+    <!-- Result boxes -->
+    <g id="results">
+      <!-- Low Risk Result -->
+      <rect x="50" y="780" width="200" height="80" class="result-success"/>
+      <text x="150" y="805" text-anchor="middle" class="step-title">低风险 (score &lt; 40)</text>
+      <text x="150" y="825" text-anchor="middle" class="step-text">✓ ACCESS GRANTED</text>
+      <text x="150" y="840" text-anchor="middle" class="step-text">允许访问资源</text>
+      <text x="150" y="855" text-anchor="middle" class="step-text">记录审计日志</text>
+
+      <!-- High Risk Result -->
+      <rect x="280" y="780" width="200" height="80" class="result-deny"/>
+      <text x="380" y="805" text-anchor="middle" class="step-title">高风险 (score ≥ 70)</text>
+      <text x="380" y="825" text-anchor="middle" class="step-text">✗ ACCESS DENIED</text>
+      <text x="380" y="840" text-anchor="middle" class="step-text">拒绝访问</text>
+      <text x="380" y="855" text-anchor="middle" class="step-text">记录审计日志</text>
+    </g>
+  </g>
+
+  <!-- Legend -->
+  <g id="legend" transform="translate(550, 780)">
+    <text x="0" y="0" class="label" font-weight="bold">图例:</text>
+
+    <line x1="0" y1="15" x2="40" y2="15" class="arrow"/>
+    <text x="50" y="20" class="label">同步请求</text>
+
+    <line x1="150" y1="15" x2="190" y2="15" class="arrow-return"/>
+    <text x="200" y="20" class="label">同步响应</text>
+
+    <line x1="300" y1="15" x2="340" y2="15" class="arrow-async"/>
+    <text x="350" y="20" class="label">异步操作</text>
+
+    <rect x="0" y="30" width="40" height="20" class="decision-box"/>
+    <text x="50" y="45" class="label">处理逻辑</text>
+
+    <rect x="150" y="30" width="40" height="20" class="result-success"/>
+    <text x="200" y="45" class="label">允许访问</text>
+
+    <rect x="300" y="30" width="40" height="20" class="result-deny"/>
+    <text x="350" y="45" class="label">拒绝访问</text>
+  </g>
+
+  <!-- Performance Metrics -->
+  <g id="metrics" transform="translate(550, 850)">
+    <text x="0" y="0" class="label" font-weight="bold">性能指标:</text>
+    <text x="0" y="20" class="label">• 平均响应时间: &lt;50ms (步骤1-10)</text>
+    <text x="0" y="40" class="label">• 风险评分计算: &lt;5ms (步骤3)</text>
+    <text x="350" y="20" class="label">• OPA策略评估: &lt;10ms (步骤6)</text>
+    <text x="350" y="40" class="label">• 审计日志写入: 异步不阻塞 (步骤8-9)</text>
+  </g>
+
+  <!-- Key Features -->
+  <g id="features" transform="translate(50, 920)">
+    <text x="0" y="0" class="label" font-weight="bold">核心特性:</text>
+    <text x="0" y="20" class="label">✓ 实时风险评分 (5因素模型)</text>
+    <text x="250" y="20" class="label">✓ 基于属性的访问控制 (ABAC)</text>
+    <text x="500" y="20" class="label">✓ 异步审计日志 (不影响性能)</text>
+    <text x="750" y="20" class="label">✓ 可追溯性保障 (完整记录)</text>
+  </g>
+</svg>

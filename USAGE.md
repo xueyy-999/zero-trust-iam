@@ -1,4 +1,4 @@
-# 使用指南
+﻿# 使用指南
 
 本文档提供零信任 IAM 系统的详细使用说明。
 
@@ -407,6 +407,7 @@ kubectl -n security describe pod <pod-name>
 
 - [README.md](README.md) - 项目概览
 - [QUICK_START.md](QUICK_START.md) - 快速开始
-- [DEPLOYMENT.md](DEPLOYMENT.md) - 详细部署
+- [docs/INDEX.md](docs/INDEX.md) - 文档总览
+- [docs/项目/PROJECT_SUMMARY.md](docs/项目/PROJECT_SUMMARY.md) - 项目总结
 - [docs/零信任IAM/](docs/零信任IAM/) - 设计文档
 

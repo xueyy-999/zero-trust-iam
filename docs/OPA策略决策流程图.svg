@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #1e293b; }
+      .subtitle { font: 16px sans-serif; fill: #475569; }
+      .step-title { font: bold 14px sans-serif; fill: #1e293b; }
+      .step-text { font: 12px sans-serif; fill: #334155; }
+      .label { font: 12px sans-serif; fill: #64748b; }
+      .decision-text { font: bold 14px sans-serif; fill: #1e293b; }
+      .arrow { stroke: #3b82f6; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-yes { stroke: #10b981; stroke-width: 3; fill: none; marker-end: url(#arrowhead-yes); }
+      .arrow-no { stroke: #ef4444; stroke-width: 3; fill: none; marker-end: url(#arrowhead-no); }
+      .input-box { fill: #dbeafe; stroke: #3b82f6; stroke-width: 2; rx: 8; }
+      .process-box { fill: #fef3c7; stroke: #f59e0b; stroke-width: 2; rx: 8; }
+      .decision-box { fill: #fce7f3; stroke: #ec4899; stroke-width: 2; }
+      .result-allow { fill: #d1fae5; stroke: #10b981; stroke-width: 3; rx: 8; }
+      .result-deny { fill: #fee2e2; stroke: #ef4444; stroke-width: 3; rx: 8; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#3b82f6" />
+    </marker>
+    <marker id="arrowhead-yes" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#10b981" />
+    </marker>
+    <marker id="arrowhead-no" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#ef4444" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" class="title">OPA 策略决策流程图</text>
+  <text x="600" y="65" text-anchor="middle" class="subtitle">Authorization Decision Process</text>
+
+  <!-- Step 1: Input -->
+  <rect x="450" y="100" width="300" height="100" class="input-box"/>
+  <text x="600" y="130" text-anchor="middle" class="step-title">输入参数 (Input)</text>
+  <text x="600" y="155" text-anchor="middle" class="step-text">• roles: ["user", "admin"]</text>
+  <text x="600" y="175" text-anchor="middle" class="step-text">• resource: "orders" | "database"</text>
+  <text x="600" y="195" text-anchor="middle" class="step-text">• action: "read" | "write" | "admin"</text>
+
+  <!-- Arrow to Risk Score Check -->
+  <path d="M 600 200 L 600 240" class="arrow"/>
+
+  <!-- Step 2: Risk Score Check -->
+  <polygon points="600,240 750,300 600,360 450,300" class="decision-box"/>
+  <text x="600" y="295" text-anchor="middle" class="decision-text">风险分数检查</text>
+  <text x="600" y="315" text-anchor="middle" class="step-text">score ≥ 70?</text>
+
+  <!-- High Risk Path (Yes) -->
+  <path d="M 750 300 L 900 300" class="arrow-no"/>
+  <text x="810" y="290" class="label" fill="#ef4444" font-weight="bold">是 (高风险)</text>
+
+  <rect x="900" y="250" width="200" height="100" class="result-deny"/>
+  <text x="1000" y="285" text-anchor="middle" class="step-title" fill="#ef4444">✗ 拒绝访问</text>
+  <text x="1000" y="310" text-anchor="middle" class="step-text">allow = false</text>
+  <text x="1000" y="330" text-anchor="middle" class="step-text">原因: 风险分数过高</text>
+
+  <!-- Low Risk Path (No) -->
+  <path d="M 600 360 L 600 420" class="arrow-yes"/>
+  <text x="620" y="395" class="label" fill="#10b981" font-weight="bold">否 (低风险)</text>
+
+  <!-- Step 3: Permission Check -->
+  <polygon points="600,420 750,480 600,540 450,480" class="decision-box"/>
+  <text x="600" y="475" text-anchor="middle" class="decision-text">权限检查</text>
+  <text x="600" y="495" text-anchor="middle" class="step-text">匹配策略规则?</text>
+
+  <!-- Rule 1: Read Orders -->
+  <g id="rule1">
+    <rect x="100" y="580" width="250" height="120" class="process-box"/>
+    <text x="225" y="610" text-anchor="middle" class="step-title">规则1: 读取订单</text>
+    <text x="225" y="635" text-anchor="middle" class="step-text">条件:</text>
+    <text x="225" y="655" text-anchor="middle" class="step-text">• action == "read"</text>
+    <text x="225" y="675" text-anchor="middle" class="step-text">• resource == "orders"</text>
+    <text x="225" y="695" text-anchor="middle" class="step-text">• not high_risk</text>
+  </g>
+
+  <!-- Rule 2: Admin Operations -->
+  <g id="rule2">
+    <rect x="400" y="580" width="250" height="120" class="process-box"/>
+    <text x="525" y="610" text-anchor="middle" class="step-title">规则2: 管理员操作</text>
+    <text x="525" y="635" text-anchor="middle" class="step-text">条件:</text>
+    <text x="525" y="655" text-anchor="middle" class="step-text">• action == "admin"</text>
+    <text x="525" y="675" text-anchor="middle" class="step-text">• roles_contains("admin")</text>
+    <text x="525" y="695" text-anchor="middle" class="step-text">• not high_risk</text>
+  </g>
+
+  <!-- Rule 3: Other Rules -->
+  <g id="rule3">
+    <rect x="700" y="580" width="250" height="120" class="process-box"/>
+    <text x="825" y="610" text-anchor="middle" class="step-title">规则3: 其他规则</text>
+    <text x="825" y="635" text-anchor="middle" class="step-text">可扩展的策略规则</text>
+    <text x="825" y="655" text-anchor="middle" class="step-text">• 自定义资源访问</text>
+    <text x="825" y="675" text-anchor="middle" class="step-text">• 特殊权限控制</text>
+    <text x="825" y="695" text-anchor="middle" class="step-text">• 时间/地理限制</text>
+  </g>
+
+  <!-- Arrows from decision to rules -->
+  <path d="M 450 480 L 225 580" class="arrow"/>
+  <path d="M 600 540 L 525 580" class="arrow"/>
+  <path d="M 750 480 L 825 580" class="arrow"/>
+
+  <!-- Match Result -->
+  <polygon points="600,730 750,790 600,850 450,790" class="decision-box"/>
+  <text x="600" y="785" text-anchor="middle" class="decision-text">是否匹配</text>
+  <text x="600" y="805" text-anchor="middle" class="step-text">任一规则?</text>
+
+  <!-- Arrows from rules to match decision -->
+  <path d="M 225 700 L 450 790" class="arrow"/>
+  <path d="M 525 700 L 600 730" class="arrow"/>
+  <path d="M 825 700 L 750 790" class="arrow"/>
+
+  <!-- Match Yes - Allow -->
+  <path d="M 450 790 L 250 790" class="arrow-yes"/>
+  <text x="330" y="780" class="label" fill="#10b981" font-weight="bold">是</text>
+
+  <rect x="50" y="740" width="200" height="100" class="result-allow"/>
+  <text x="150" y="775" text-anchor="middle" class="step-title" fill="#10b981">✓ 允许访问</text>
+  <text x="150" y="800" text-anchor="middle" class="step-text">allow = true</text>
+  <text x="150" y="820" text-anchor="middle" class="step-text">授权成功</text>
+
+  <!-- Match No - Deny -->
+  <path d="M 750 790 L 950 790" class="arrow-no"/>
+  <text x="830" y="780" class="label" fill="#ef4444" font-weight="bold">否</text>
+
+  <rect x="950" y="740" width="200" height="100" class="result-deny"/>
+  <text x="1050" y="775" text-anchor="middle" class="step-title" fill="#ef4444">✗ 拒绝访问</text>
+  <text x="1050" y="800" text-anchor="middle" class="step-text">allow = false</text>
+  <text x="1050" y="820" text-anchor="middle" class="step-text">无匹配权限</text>
+
+  <!-- Legend -->
+  <g id="legend" transform="translate(50, 870)">
+    <text x="0" y="0" class="label" font-weight="bold">图例:</text>
+
+    <rect x="0" y="10" width="40" height="20" class="input-box"/>
+    <text x="50" y="25" class="label">输入数据</text>
+
+    <rect x="150" y="10" width="40" height="20" class="process-box"/>
+    <text x="200" y="25" class="label">策略规则</text>
+
+    <polygon points="300,10 330,20 300,30 270,20" class="decision-box"/>
+    <text x="340" y="25" class="label">决策点</text>
+
+    <rect x="450" y="10" width="40" height="20" class="result-allow"/>
+    <text x="500" y="25" class="label">允许</text>
+
+    <rect x="600" y="10" width="40" height="20" class="result-deny"/>
+    <text x="650" y="25" class="label">拒绝</text>
+  </g>
+</svg>

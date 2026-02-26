@@ -12,23 +12,23 @@ default allow = false
 #   "score": 35
 # }
 
-allow {
+allow if {
   input.action == "read"
   input.resource == "orders"
   not high_risk
 }
 
-allow {
+allow if {
   input.action == "admin"
   roles_contains("admin")
   not high_risk
 }
 
-high_risk {
+high_risk if {
   input.score >= 70
 }
 
-roles_contains(r) {
+roles_contains(r) if {
   some i
   input.roles[i] == r
 }

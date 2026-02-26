@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #1e293b; }
+      .subtitle { font: 16px sans-serif; fill: #475569; }
+      .module-title { font: bold 16px sans-serif; fill: #ffffff; }
+      .module-text { font: 14px sans-serif; fill: #ffffff; }
+      .label { font: 14px sans-serif; fill: #64748b; }
+      .arrow { stroke: #3b82f6; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-label { font: 12px sans-serif; fill: #3b82f6; }
+      .module-box { rx: 8; stroke: #1e293b; stroke-width: 2; }
+      .user-box { fill: #8b5cf6; }
+      .frontend-box { fill: #3b82f6; }
+      .backend-box { fill: #10b981; }
+      .policy-box { fill: #f59e0b; }
+      .storage-box { fill: #ef4444; }
+      .external-box { fill: #6366f1; stroke-dasharray: 5,5; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#3b82f6" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" class="title">零信任IAM系统架构图</text>
+  <text x="600" y="65" text-anchor="middle" class="subtitle">Zero-Trust Identity and Access Management System</text>
+
+  <!-- User Layer -->
+  <rect x="500" y="100" width="200" height="80" class="module-box user-box"/>
+  <text x="600" y="130" text-anchor="middle" class="module-title">用户层 (User)</text>
+  <text x="600" y="155" text-anchor="middle" class="module-text">浏览器 / API客户端</text>
+  <text x="600" y="175" text-anchor="middle" class="module-text">HTTP/HTTPS</text>
+
+  <!-- Frontend Layer -->
+  <rect x="450" y="230" width="300" height="100" class="module-box frontend-box"/>
+  <text x="600" y="260" text-anchor="middle" class="module-title">前端门户 (Web Portal)</text>
+  <text x="600" y="285" text-anchor="middle" class="module-text">Go + HTML模板 (395行)</text>
+  <text x="600" y="305" text-anchor="middle" class="module-text">端口: 8081</text>
+  <text x="600" y="325" text-anchor="middle" class="module-text">功能: 用户交互、表单提交、OIDC登录</text>
+
+  <!-- Backend Services Layer -->
+  <g id="backend-services">
+    <!-- Risk Service -->
+    <rect x="100" y="400" width="280" height="120" class="module-box backend-box"/>
+    <text x="240" y="430" text-anchor="middle" class="module-title">风险评分服务 (Risk Service)</text>
+    <text x="240" y="455" text-anchor="middle" class="module-text">Go RESTful API (226行)</text>
+    <text x="240" y="475" text-anchor="middle" class="module-text">端口: 8080</text>
+    <text x="240" y="495" text-anchor="middle" class="module-text">功能: 多因素风险评分</text>
+    <text x="240" y="515" text-anchor="middle" class="module-text">算法: 5因素综合模型</text>
+
+    <!-- OPA Policy Engine -->
+    <rect x="460" y="400" width="280" height="120" class="module-box policy-box"/>
+    <text x="600" y="430" text-anchor="middle" class="module-title">授权策略引擎 (OPA)</text>
+    <text x="600" y="455" text-anchor="middle" class="module-text">Rego策略语言 (35行)</text>
+    <text x="600" y="475" text-anchor="middle" class="module-text">端口: 8181</text>
+    <text x="600" y="495" text-anchor="middle" class="module-text">功能: ABAC授权决策</text>
+    <text x="600" y="515" text-anchor="middle" class="module-text">策略: 基于角色+风险分数</text>
+
+    <!-- Audit Logger -->
+    <rect x="820" y="400" width="280" height="120" class="module-box backend-box"/>
+    <text x="960" y="430" text-anchor="middle" class="module-title">审计日志模块 (Audit Logger)</text>
+    <text x="960" y="455" text-anchor="middle" class="module-text">Go + MySQL (135行)</text>
+    <text x="960" y="475" text-anchor="middle" class="module-text">功能: 异步日志写入</text>
+    <text x="960" y="495" text-anchor="middle" class="module-text">特性: 可追溯、合规检查</text>
+    <text x="960" y="515" text-anchor="middle" class="module-text">性能: 不阻塞主流程</text>
+  </g>
+
+  <!-- Storage Layer -->
+  <rect x="820" y="580" width="280" height="80" class="module-box storage-box"/>
+  <text x="960" y="610" text-anchor="middle" class="module-title">数据存储层 (MySQL 8.0)</text>
+  <text x="960" y="635" text-anchor="middle" class="module-text">表: audit_logs</text>
+  <text x="960" y="655" text-anchor="middle" class="module-text">索引: user_id, timestamp, risk_score</text>
+
+  <!-- External Services (Optional) -->
+  <rect x="100" y="580" width="280" height="80" class="module-box external-box"/>
+  <text x="240" y="610" text-anchor="middle" class="module-title">外部服务 (可选)</text>
+  <text x="240" y="635" text-anchor="middle" class="module-text">Keycloak OIDC</text>
+  <text x="240" y="655" text-anchor="middle" class="module-text">端口: 8080 (Keycloak)</text>
+
+  <!-- Arrows and Data Flow -->
+  <!-- User to Web Portal -->
+  <path d="M 600 180 L 600 230" class="arrow"/>
+  <text x="620" y="210" class="arrow-label">HTTP请求</text>
+
+  <!-- Web Portal to Risk Service -->
+  <path d="M 450 280 L 380 400" class="arrow"/>
+  <text x="390" y="340" class="arrow-label">POST /score</text>
+
+  <!-- Web Portal to OPA -->
+  <path d="M 600 330 L 600 400" class="arrow"/>
+  <text x="620" y="370" class="arrow-label">授权查询</text>
+
+  <!-- Risk Service to Audit Logger -->
+  <path d="M 380 460 L 820 460" class="arrow"/>
+  <text x="580" y="450" class="arrow-label">异步日志写入</text>
+
+  <!-- Audit Logger to MySQL -->
+  <path d="M 960 520 L 960 580" class="arrow"/>
+  <text x="980" y="555" class="arrow-label">持久化</text>
+
+  <!-- Web Portal to Keycloak (Optional) -->
+  <path d="M 450 300 L 380 580" class="arrow" stroke-dasharray="5,5"/>
+  <text x="390" y="440" class="arrow-label">OIDC登录</text>
+
+  <!-- Legend -->
+  <g id="legend" transform="translate(50, 700)">
+    <text x="0" y="0" class="label" font-weight="bold">图例:</text>
+    <rect x="0" y="10" width="40" height="20" class="module-box frontend-box"/>
+    <text x="50" y="25" class="label">前端层</text>
+
+    <rect x="150" y="10" width="40" height="20" class="module-box backend-box"/>
+    <text x="200" y="25" class="label">后端服务</text>
+
+    <rect x="300" y="10" width="40" height="20" class="module-box policy-box"/>
+    <text x="350" y="25" class="label">策略引擎</text>
+
+    <rect x="450" y="10" width="40" height="20" class="module-box storage-box"/>
+    <text x="500" y="25" class="label">存储层</text>
+
+    <rect x="600" y="10" width="40" height="20" class="module-box external-box"/>
+    <text x="650" y="25" class="label">外部服务(可选)</text>
+  </g>
+
+  <!-- Technical Stack Info -->
+  <g id="tech-stack" transform="translate(50, 750)">
+    <text x="0" y="0" class="label" font-weight="bold">技术栈:</text>
+    <text x="0" y="20" class="label">• 容器编排: Kubernetes (kubeadm)</text>
+    <text x="300" y="20" class="label">• 编程语言: Go 1.22+</text>
+    <text x="600" y="20" class="label">• 策略引擎: OPA (Rego)</text>
+    <text x="900" y="20" class="label">• 数据库: MySQL 8.0</text>
+  </g>
+</svg>

@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #1e293b; }
+      .subtitle { font: 16px sans-serif; fill: #475569; }
+      .scenario-title { font: bold 18px sans-serif; fill: #1e293b; }
+      .label { font: 12px sans-serif; fill: #64748b; }
+      .value { font: 13px sans-serif; fill: #334155; }
+      .code { font: 12px 'Courier New', monospace; fill: #334155; }
+      .result-title { font: bold 20px sans-serif; }
+      .result-subtitle { font: 14px sans-serif; }
+      .badge { font: bold 12px sans-serif; fill: white; }
+      .scenario-box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; rx: 8; }
+      .request-box { fill: #f8fafc; stroke: #e2e8f0; stroke-width: 1; rx: 6; }
+      .response-success { fill: #d1fae5; stroke: #10b981; stroke-width: 3; rx: 8; }
+      .response-deny { fill: #fee2e2; stroke: #ef4444; stroke-width: 3; rx: 8; }
+      .score-low { fill: #10b981; }
+      .score-high { fill: #ef4444; }
+      .arrow { stroke: #94a3b8; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="700" y="40" text-anchor="middle" class="title">风险评分场景对比 - 低风险 vs 高风险</text>
+  <text x="700" y="65" text-anchor="middle" class="subtitle">Risk Scoring Comparison: Low Risk vs High Risk Scenarios</text>
+
+  <!-- Low Risk Scenario -->
+  <g id="low-risk">
+    <rect x="50" y="100" width="600" height="750" class="scenario-box"/>
+    <text x="350" y="135" text-anchor="middle" class="scenario-title">场景A: 低风险 - 正常访问</text>
+
+    <!-- Request -->
+    <rect x="70" y="160" width="560" height="280" class="request-box"/>
+    <text x="90" y="185" class="label" font-weight="bold">📤 请求参数 (Request)</text>
+
+    <text x="90" y="215" class="code">POST http://localhost:8080/score</text>
+    <text x="90" y="235" class="code">Content-Type: application/json</text>
+
+    <rect x="90" y="250" width="520" height="175" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" rx="4"/>
+    <text x="110" y="275" class="code">{</text>
+    <text x="130" y="295" class="code">"userId": "user123",</text>
+    <text x="130" y="315" class="code">"roles": ["user"],</text>
+    <text x="130" y="335" class="code">"resource": "orders",</text>
+    <text x="130" y="355" class="code">"action": "read",</text>
+    <text x="130" y="375" class="code">"ip": "192.168.1.100",</text>
+    <text x="130" y="395" class="code">"geo": "CN",</text>
+    <text x="130" y="415" class="code">"failedLoginCount": 0</text>
+    <text x="110" y="435" class="code">}</text>
+
+    <!-- Arrow -->
+    <path d="M 350 450 L 350 480" class="arrow"/>
+    <text x="370" y="470" class="label">风险评分</text>
+
+    <!-- Response -->
+    <rect x="70" y="490" width="560" height="340" class="response-success"/>
+    <text x="90" y="520" class="label" font-weight="bold">📥 响应结果 (Response)</text>
+
+    <!-- Score Badge -->
+    <circle cx="350" cy="570" r="50" class="score-low"/>
+    <text x="350" y="580" text-anchor="middle" fill="white" font-size="32" font-weight="bold">0</text>
+    <text x="350" y="635" text-anchor="middle" class="label">风险分数</text>
+
+    <!-- Response JSON -->
+    <rect x="90" y="660" width="520" height="80" fill="#ffffff" stroke="#10b981" stroke-width="1" rx="4"/>
+    <text x="110" y="685" class="code">{</text>
+    <text x="130" y="705" class="code">"score": 0,</text>
+    <text x="130" y="725" class="code">"reasons": []</text>
+    <text x="110" y="745" class="code">}</text>
+
+    <!-- Decision -->
+    <rect x="90" y="760" width="520" height="50" fill="#10b981" rx="6"/>
+    <text x="350" y="785" text-anchor="middle" class="result-title" fill="white">✓ ACCESS GRANTED</text>
+    <text x="350" y="805" text-anchor="middle" class="result-subtitle" fill="white">允许访问 - 无风险因素</text>
+  </g>
+
+  <!-- High Risk Scenario -->
+  <g id="high-risk">
+    <rect x="750" y="100" width="600" height="750" class="scenario-box"/>
+    <text x="1050" y="135" text-anchor="middle" class="scenario-title">场景B: 高风险 - 异常访问</text>
+
+    <!-- Request -->
+    <rect x="770" y="160" width="560" height="280" class="request-box"/>
+    <text x="790" y="185" class="label" font-weight="bold">📤 请求参数 (Request)</text>
+
+    <text x="790" y="215" class="code">POST http://localhost:8080/score</text>
+    <text x="790" y="235" class="code">Content-Type: application/json</text>
+
+    <rect x="790" y="250" width="520" height="175" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" rx="4"/>
+    <text x="810" y="275" class="code">{</text>
+    <text x="830" y="295" class="code">"userId": "admin999",</text>
+    <text x="830" y="315" class="code">"roles": ["admin"],</text>
+    <text x="830" y="335" class="code">"resource": "database",</text>
+    <text x="830" y="355" class="code">"action": "admin",</text>
+    <text x="830" y="375" class="code">"ip": "1.2.3.4",</text>
+    <text x="830" y="395" class="code">"geo": "US",  // 异常地理位置</text>
+    <text x="830" y="415" class="code">"failedLoginCount": 5  // 多次失败</text>
+    <text x="810" y="435" class="code">}</text>
+
+    <!-- Arrow -->
+    <path d="M 1050 450 L 1050 480" class="arrow"/>
+    <text x="1070" y="470" class="label">风险评分</text>
+
+    <!-- Response -->
+    <rect x="770" y="490" width="560" height="340" class="response-deny"/>
+    <text x="790" y="520" class="label" font-weight="bold">📥 响应结果 (Response)</text>
+
+    <!-- Score Badge -->
+    <circle cx="1050" cy="570" r="50" class="score-high"/>
+    <text x="1050" y="580" text-anchor="middle" fill="white" font-size="32" font-weight="bold">100</text>
+    <text x="1050" y="635" text-anchor="middle" class="label">风险分数</text>
+
+    <!-- Response JSON -->
+    <rect x="790" y="660" width="520" height="80" fill="#ffffff" stroke="#ef4444" stroke-width="1" rx="4"/>
+    <text x="810" y="685" class="code" font-size="11">{</text>
+    <text x="830" y="705" class="code" font-size="11">"score": 100,</text>
+    <text x="830" y="725" class="code" font-size="11">"reasons": ["many_failed_logins", "geo_anomaly", ...]</text>
+    <text x="810" y="745" class="code" font-size="11">}</text>
+
+    <!-- Decision -->
+    <rect x="790" y="760" width="520" height="50" fill="#ef4444" rx="6"/>
+    <text x="1050" y="785" text-anchor="middle" class="result-title" fill="white">✗ ACCESS DENIED</text>
+    <text x="1050" y="805" text-anchor="middle" class="result-subtitle" fill="white">拒绝访问 - 5个风险因素触发</text>
+  </g>
+
+  <!-- Comparison Summary -->
+  <g id="summary" transform="translate(50, 870)">
+    <text x="0" y="0" class="label" font-weight="bold" font-size="14">对比总结:</text>
+    <text x="150" y="0" class="value">场景A: 0分 (无风险) → 允许访问</text>
+    <text x="500" y="0" class="value">|</text>
+    <text x="550" y="0" class="value">场景B: 100分 (极高风险) → 拒绝访问</text>
+    <text x="1050" y="0" class="value">差异: 5个风险因素</text>
+  </g>
+</svg>

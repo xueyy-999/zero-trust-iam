@@ -1,4 +1,4 @@
-# 零信任IAM系统 - 项目状态报告 v2.0
+﻿# 零信任IAM系统 - 项目状态报告 v2.0
 
 **更新日期：** 2024-12-19  
 **项目版本：** v2.0  
@@ -217,8 +217,8 @@ scripts/
 
 ### 文档
 ```
-├── IMPROVEMENTS.md           # 改进说明（新增）
-└── PROJECT_STATUS_v2.md      # 本文件（新增）
+├── docs/项目/IMPROVEMENTS.md           # 改进说明（新增）
+└── docs/项目/PROJECT_STATUS_v2.md      # 本文件（新增）
 ```
 
 ---
@@ -487,14 +487,17 @@ export MYSQL_DSN="root:mypassword@tcp(localhost:3306)/iam_db"
 
 ## 📚 相关文档
 
-- **[README.md](README.md)** - 项目概述
+- **[README.md](../../README.md)** - 项目概述
+- **[QUICK_START.md](../../QUICK_START.md)** - 快速开始
+- **[USAGE.md](../../USAGE.md)** - 部署与使用指南
+- **[TEST_API.md](../../TEST_API.md)** - API测试
 - **[IMPROVEMENTS.md](IMPROVEMENTS.md)** - 改进详情
-- **[QUICK_START.md](QUICK_START.md)** - 快速开始
-- **[TEST_API.md](TEST_API.md)** - API测试
-- **[docs/需求分析文档.md](docs/需求分析文档.md)** - 需求分析
-- **[docs/系统架构设计.md](docs/系统架构设计.md)** - 架构设计
-- **[docs/答辩PPT大纲.md](docs/答辩PPT大纲.md)** - 答辩准备
-
+- **[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)** - 项目总结
+- **[docs/INDEX.md](../INDEX.md)** - 文档总览
+- **[需求分析文档.md](../需求分析文档.md)** - 需求分析
+- **[系统架构设计.md](../系统架构设计.md)** - 架构设计
+- **[答辩PPT大纲.md](../答辩/答辩PPT大纲.md)** - 答辩PPT大纲
+- **[答辩演示指南.md](../答辩/答辩演示指南.md)** - 答辩演示
 ---
 
 ## ✅ 结论
@@ -513,3 +516,9 @@ export MYSQL_DSN="root:mypassword@tcp(localhost:3306)/iam_db"
 
 **最后更新：** 2024-12-19  
 **下一步：** 准备答辩PPT和演示环境
+
+
+
+
+
+

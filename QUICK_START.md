@@ -1,4 +1,4 @@
-# 快速开始
+﻿# 快速开始
 
 ## 5 分钟快速部署
 
@@ -44,7 +44,33 @@ kubectl -n security get all
 ```
 .
 ├── README.md                    # 项目概述
-├── DEPLOYMENT.md               # 详细部署指南
+├── QUICK_START.md              # 本文件
+├── USAGE.md                    # 部署与使用指南
+├── TEST_API.md                 # API 测试示例
+├── ansible/
+│   ├── inventory/hosts.ini     # 主机配置（改这里）
+│   ├── group_vars/all.yml      # 全局变量（改这里）
+│   └── playbooks/
+│       ├── 00-all.yml          # 主 playbook
+│       ├── 01-k8s.yml          # Kubernetes 安装
+│       └── 10-apps.yml         # 应用部署
+├── services/risk-service/      # Risk Service 源码
+│   ├── main.go
+│   ├── Dockerfile
+│   └── go.mod
+├── opa/policies/
+│   └── abac.rego               # OPA 授权策略
+└── docs/
+    ├── INDEX.md                # 文档索引
+    ├── 项目/                   # 项目总结与改进
+    ├── 论文/                   # 论文相关
+    ├── 答辩/                   # 答辩相关
+    └── 零信任IAM/
+        └── TASK_零信任IAM.md
+```
+.
+├── README.md                    # 项目概述
+├── USAGE.md               # 详细部署指南
 ├── QUICK_START.md             # 本文件
 ├── ansible/
 │   ├── inventory/hosts.ini     # 主机配置（改这里）
@@ -133,6 +159,9 @@ kubectl -n security logs <pod-name>
 
 ## 更多信息
 
-- 详细部署指南：DEPLOYMENT.md
+- 详细部署指南：USAGE.md
 - 功能清单：docs/零信任IAM/TASK_零信任IAM.md
+
+
+
 

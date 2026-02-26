@@ -1,4 +1,4 @@
-# 零信任 IAM 毕业设计
+﻿# 零信任 IAM 毕业设计
 
 ![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8?style=flat&logo=go)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-1.28+-326CE5?style=flat&logo=kubernetes&logoColor=white)
@@ -97,12 +97,11 @@ bash scripts/run-local.sh
 ├── opa/policies/           # OPA 授权策略
 ├── scripts/                # 辅助脚本
 └── docs/                   # 文档
-    ├── 需求分析文档.md     # 需求分析
-    ├── 系统架构设计.md     # 架构设计
-    └── 答辩PPT大纲.md      # 答辩准备
-
+    ├── INDEX.md            # 文档总览
+    ├── 论文/               # 论文相关
+    ├── 答辩/               # 答辩相关
+    └── 项目/               # 项目总结/改进/状态
 ```
-
 ## 核心功能
 
 ### 1. 风险评估（Risk Service）
@@ -140,9 +139,15 @@ bash scripts/run-local.sh
 
 ## 文档索引
 
+- **[docs/INDEX.md](docs/INDEX.md)** - 文档总览
 - **[QUICK_START.md](QUICK_START.md)** - 5 分钟快速开始
-- **[DEPLOYMENT.md](DEPLOYMENT.md)** - 详细部署指南
-- **[PROJECT_SUMMARY.md](PROJECT_SUMMARY.md)** - 项目总结
+- **[USAGE.md](USAGE.md)** - 部署与使用指南
+- **[TEST_API.md](TEST_API.md)** - API 测试示例
+- **[docs/项目/PROJECT_SUMMARY.md](docs/项目/PROJECT_SUMMARY.md)** - 项目总结
+- **[docs/项目/PROJECT_STATUS_v2.md](docs/项目/PROJECT_STATUS_v2.md)** - 项目状态报告
+- **[docs/项目/IMPROVEMENTS.md](docs/项目/IMPROVEMENTS.md)** - 改进说明
+- **[docs/答辩/答辩PPT大纲.md](docs/答辩/答辩PPT大纲.md)** - 答辩PPT大纲
+- **[docs/答辩/答辩演示指南.md](docs/答辩/答辩演示指南.md)** - 答辩演示
 - **[docs/零信任IAM/](docs/零信任IAM/)** - 详细设计文档
 
 ## 常见问题
@@ -181,3 +186,10 @@ curl -X POST http://localhost:8080/score \
 ## 许可证
 
 MIT License（仅供学习使用）
+
+
+
+
+
+
+

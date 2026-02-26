@@ -1,4 +1,4 @@
-# 更新日志
+﻿# 更新日志
 
 ## [v2.0] - 2024-12-19
 
@@ -59,9 +59,9 @@
 
 ### 📝 文档
 
-- 新增 `IMPROVEMENTS.md` - 详细的改进说明
-- 新增 `PROJECT_STATUS_v2.md` - 项目状态报告 v2.0
-- 新增 `CHANGELOG.md` - 本文件
+- 新增 `docs/项目/IMPROVEMENTS.md` - 详细的改进说明
+- 新增 `docs/项目/PROJECT_STATUS_v2.md` - 项目状态报告 v2.0
+- 新增 `docs/项目/CHANGELOG.md` - 本文件
 
 ### 🧪 测试结果
 
@@ -158,3 +158,4 @@ Requests/Second: 117.6
 
 **维护者**: 毕业设计项目组  
 **最后更新**: 2024-12-19
+

@@ -1,4 +1,4 @@
-# 零信任 IAM 毕设 - 核心功能清单
+﻿# 零信任 IAM 毕设 - 核心功能清单
 
 ## 已实现的功能
 
@@ -25,3 +25,4 @@
 2. 更新 `ansible/group_vars/all.yml` - 改密码和镜像
 3. 运行 `ansible-playbook -i ansible/inventory/hosts.ini ansible/playbooks/00-all.yml`
 4. 验证：`kubectl -n security get all`
+

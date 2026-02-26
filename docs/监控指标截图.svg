@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700">
+  <defs>
+    <style>
+      .title { font: bold 22px 'Courier New', monospace; fill: #1e293b; }
+      .subtitle { font: 14px sans-serif; fill: #64748b; }
+      .terminal-bg { fill: #0f172a; }
+      .terminal-text { font: 13px 'Courier New', monospace; fill: #e2e8f0; }
+      .terminal-key { font: 13px 'Courier New', monospace; fill: #60a5fa; }
+      .terminal-value { font: 13px 'Courier New', monospace; fill: #34d399; }
+      .terminal-header { font: bold 13px 'Courier New', monospace; fill: #94a3b8; }
+      .metric-label { font: 12px sans-serif; fill: #334155; }
+      .metric-value { font: bold 18px sans-serif; fill: #1e293b; }
+      .badge { font: bold 11px sans-serif; fill: white; }
+      .badge-success { fill: #10b981; }
+      .badge-info { fill: #3b82f6; }
+      .badge-warning { fill: #f59e0b; }
+      .badge-danger { fill: #ef4444; }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="35" text-anchor="middle" class="title">监控指标端点 - /metrics</text>
+  <text x="600" y="55" text-anchor="middle" class="subtitle">Risk Service Monitoring Metrics Endpoint</text>
+
+  <!-- Terminal Window -->
+  <rect x="50" y="80" width="1100" height="350" rx="8" class="terminal-bg"/>
+
+  <!-- Terminal Header -->
+  <rect x="50" y="80" width="1100" height="30" rx="8" fill="#1e293b"/>
+  <circle cx="70" cy="95" r="6" fill="#ef4444"/>
+  <circle cx="90" cy="95" r="6" fill="#fbbf24"/>
+  <circle cx="110" cy="95" r="6" fill="#10b981"/>
+  <text x="130" y="100" class="terminal-header">$ curl http://localhost:8080/metrics</text>
+
+  <!-- Metrics JSON Output -->
+  <g id="metrics-output">
+    <text x="70" y="140" class="terminal-text">{</text>
+
+    <text x="90" y="170" class="terminal-key">  "total_requests"</text>
+    <text x="280" y="170" class="terminal-text">: </text>
+    <text x="300" y="170" class="terminal-value">2</text>
+    <text x="320" y="170" class="terminal-text">,</text>
+
+    <text x="90" y="200" class="terminal-key">  "success_requests"</text>
+    <text x="280" y="200" class="terminal-text">: </text>
+    <text x="300" y="200" class="terminal-value">2</text>
+    <text x="320" y="200" class="terminal-text">,</text>
+
+    <text x="90" y="230" class="terminal-key">  "failed_requests"</text>
+    <text x="280" y="230" class="terminal-text">: </text>
+    <text x="300" y="230" class="terminal-value">0</text>
+    <text x="320" y="230" class="terminal-text">,</text>
+
+    <text x="90" y="260" class="terminal-key">  "high_risk_count"</text>
+    <text x="280" y="260" class="terminal-text">: </text>
+    <text x="300" y="260" class="terminal-value">1</text>
+    <text x="320" y="260" class="terminal-text">,</text>
+
+    <text x="90" y="290" class="terminal-key">  "medium_risk_count"</text>
+    <text x="280" y="290" class="terminal-text">: </text>
+    <text x="300" y="290" class="terminal-value">0</text>
+    <text x="320" y="290" class="terminal-text">,</text>
+
+    <text x="90" y="320" class="terminal-key">  "low_risk_count"</text>
+    <text x="280" y="320" class="terminal-text">: </text>
+    <text x="300" y="320" class="terminal-value">1</text>
+
+    <text x="70" y="350" class="terminal-text">}</text>
+
+    <!-- Response Info -->
+    <text x="70" y="390" class="terminal-header">HTTP/1.1 200 OK</text>
+    <text x="70" y="410" class="terminal-header">Content-Type: application/json</text>
+  </g>
+
+  <!-- Metrics Dashboard -->
+  <g id="dashboard">
+    <rect x="50" y="460" width="1100" height="220" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" rx="8"/>
+    <text x="600" y="490" text-anchor="middle" font-size="16" font-weight="bold" fill="#1e293b">实时监控指标仪表板</text>
+
+    <!-- Metric Cards -->
+    <!-- Total Requests -->
+    <g transform="translate(80, 520)">
+      <rect width="160" height="130" fill="white" stroke="#e2e8f0" stroke-width="2" rx="6"/>
+      <rect width="160" height="40" fill="#3b82f6" rx="6"/>
+      <text x="80" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="bold">总请求数</text>
+      <text x="80" y="85" text-anchor="middle" class="metric-value" font-size="36">2</text>
+      <text x="80" y="110" text-anchor="middle" class="metric-label">Total Requests</text>
+    </g>
+
+    <!-- Success Rate -->
+    <g transform="translate(270, 520)">
+      <rect width="160" height="130" fill="white" stroke="#e2e8f0" stroke-width="2" rx="6"/>
+      <rect width="160" height="40" fill="#10b981" rx="6"/>
+      <text x="80" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="bold">成功率</text>
+      <text x="80" y="85" text-anchor="middle" class="metric-value" font-size="36" fill="#10b981">100%</text>
+      <text x="80" y="110" text-anchor="middle" class="metric-label">Success: 2 / Failed: 0</text>
+    </g>
+
+    <!-- Low Risk -->
+    <g transform="translate(460, 520)">
+      <rect width="160" height="130" fill="white" stroke="#e2e8f0" stroke-width="2" rx="6"/>
+      <rect width="160" height="40" fill="#10b981" rx="6"/>
+      <text x="80" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="bold">低风险</text>
+      <text x="80" y="85" text-anchor="middle" class="metric-value" font-size="36" fill="#10b981">1</text>
+      <text x="80" y="110" text-anchor="middle" class="metric-label">Low Risk (score &lt; 40)</text>
+    </g>
+
+    <!-- Medium Risk -->
+    <g transform="translate(650, 520)">
+      <rect width="160" height="130" fill="white" stroke="#e2e8f0" stroke-width="2" rx="6"/>
+      <rect width="160" height="40" fill="#f59e0b" rx="6"/>
+      <text x="80" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="bold">中风险</text>
+      <text x="80" y="85" text-anchor="middle" class="metric-value" font-size="36" fill="#64748b">0</text>
+      <text x="80" y="110" text-anchor="middle" class="metric-label">Medium Risk (40-69)</text>
+    </g>
+
+    <!-- High Risk -->
+    <g transform="translate(840, 520)">
+      <rect width="160" height="130" fill="white" stroke="#e2e8f0" stroke-width="2" rx="6"/>
+      <rect width="160" height="40" fill="#ef4444" rx="6"/>
+      <text x="80" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="bold">高风险</text>
+      <text x="80" y="85" text-anchor="middle" class="metric-value" font-size="36" fill="#ef4444">1</text>
+      <text x="80" y="110" text-anchor="middle" class="metric-label">High Risk (≥ 70)</text>
+    </g>
+
+    <!-- Risk Distribution -->
+    <g transform="translate(1030, 520)">
+      <rect width="100" height="130" fill="white" stroke="#e2e8f0" stroke-width="2" rx="6"/>
+      <text x="50" y="25" text-anchor="middle" class="metric-label" font-weight="bold">风险分布</text>
+
+      <!-- Pie Chart Representation -->
+      <circle cx="50" cy="75" r="30" fill="#10b981" opacity="0.3"/>
+      <path d="M 50 75 L 50 45 A 30 30 0 0 1 80 75 Z" fill="#ef4444"/>
+      <path d="M 50 75 L 80 75 A 30 30 0 0 1 50 105 Z" fill="#10b981"/>
+
+      <text x="50" y="120" text-anchor="middle" class="metric-label" font-size="10">50% 高风险</text>
+    </g>
+  </g>
+</svg>

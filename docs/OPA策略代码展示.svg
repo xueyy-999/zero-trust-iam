@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700">
+  <defs>
+    <style>
+      .title { font: bold 22px 'Courier New', monospace; fill: #1e293b; }
+      .subtitle { font: 14px sans-serif; fill: #64748b; }
+      .code { font: 13px 'Courier New', monospace; fill: #e2e8f0; }
+      .code-keyword { font: bold 13px 'Courier New', monospace; fill: #f472b6; }
+      .code-function { font: 13px 'Courier New', monospace; fill: #60a5fa; }
+      .code-string { font: 13px 'Courier New', monospace; fill: #34d399; }
+      .code-number { font: 13px 'Courier New', monospace; fill: #fbbf24; }
+      .code-comment { font: 13px 'Courier New', monospace; fill: #94a3b8; font-style: italic; }
+      .line-number { font: 13px 'Courier New', monospace; fill: #64748b; text-anchor: end; }
+      .highlight-box { fill: #1e293b; stroke: #3b82f6; stroke-width: 2; rx: 8; }
+      .label { font: 12px sans-serif; fill: #64748b; }
+      .feature-text { font: 11px sans-serif; fill: #334155; }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="500" y="35" text-anchor="middle" class="title">OPA ABAC 授权策略代码</text>
+  <text x="500" y="55" text-anchor="middle" class="subtitle">Open Policy Agent - Attribute-Based Access Control (abac.rego)</text>
+
+  <!-- Code Editor Background -->
+  <rect x="50" y="80" width="900" height="520" class="highlight-box"/>
+
+  <!-- Line Numbers and Code -->
+  <g id="code-content">
+    <!-- Line 1 -->
+    <text x="70" y="110" class="line-number">1</text>
+    <text x="90" y="110" class="code-keyword">package</text>
+    <text x="160" y="110" class="code"> authz</text>
+
+    <!-- Line 2 (empty) -->
+    <text x="70" y="130" class="line-number">2</text>
+
+    <!-- Line 3 -->
+    <text x="70" y="150" class="line-number">3</text>
+    <text x="90" y="150" class="code-keyword">default</text>
+    <text x="160" y="150" class="code"> allow = </text>
+    <text x="240" y="150" class="code-keyword">false</text>
+
+    <!-- Line 4 (empty) -->
+    <text x="70" y="170" class="line-number">4</text>
+
+    <!-- Line 5 -->
+    <text x="70" y="190" class="line-number">5</text>
+    <text x="90" y="190" class="code-comment"># 普通用户读取订单 - 低风险允许</text>
+
+    <!-- Line 6 -->
+    <text x="70" y="210" class="line-number">6</text>
+    <text x="90" y="210" class="code-keyword">allow</text>
+    <text x="140" y="210" class="code"> {</text>
+
+    <!-- Line 7 -->
+    <text x="70" y="230" class="line-number">7</text>
+    <text x="110" y="230" class="code">  input.action == </text>
+    <text x="260" y="230" class="code-string">"read"</text>
+
+    <!-- Line 8 -->
+    <text x="70" y="250" class="line-number">8</text>
+    <text x="110" y="250" class="code">  input.resource == </text>
+    <text x="280" y="250" class="code-string">"orders"</text>
+
+    <!-- Line 9 -->
+    <text x="70" y="270" class="line-number">9</text>
+    <text x="110" y="270" class="code-keyword">  not</text>
+    <text x="150" y="270" class="code"> high_risk</text>
+
+    <!-- Line 10 -->
+    <text x="70" y="290" class="line-number">10</text>
+    <text x="90" y="290" class="code">}</text>
+
+    <!-- Line 11 (empty) -->
+    <text x="70" y="310" class="line-number">11</text>
+
+    <!-- Line 12 -->
+    <text x="70" y="330" class="line-number">12</text>
+    <text x="90" y="330" class="code-comment"># 管理员操作 - 需admin角色且低风险</text>
+
+    <!-- Line 13 -->
+    <text x="70" y="350" class="line-number">13</text>
+    <text x="90" y="350" class="code-keyword">allow</text>
+    <text x="140" y="350" class="code"> {</text>
+
+    <!-- Line 14 -->
+    <text x="70" y="370" class="line-number">14</text>
+    <text x="110" y="370" class="code">  input.action == </text>
+    <text x="260" y="370" class="code-string">"admin"</text>
+
+    <!-- Line 15 -->
+    <text x="70" y="390" class="line-number">15</text>
+    <text x="110" y="390" class="code">  </text>
+    <text x="110" y="390" class="code-function">roles_contains</text>
+    <text x="240" y="390" class="code">(</text>
+    <text x="250" y="390" class="code-string">"admin"</text>
+    <text x="310" y="390" class="code">)</text>
+
+    <!-- Line 16 -->
+    <text x="70" y="410" class="line-number">16</text>
+    <text x="110" y="410" class="code-keyword">  not</text>
+    <text x="150" y="410" class="code"> high_risk</text>
+
+    <!-- Line 17 -->
+    <text x="70" y="430" class="line-number">17</text>
+    <text x="90" y="430" class="code">}</text>
+
+    <!-- Line 18 (empty) -->
+    <text x="70" y="450" class="line-number">18</text>
+
+    <!-- Line 19 -->
+    <text x="70" y="470" class="line-number">19</text>
+    <text x="90" y="470" class="code-comment"># 高风险定义：分数≥70</text>
+
+    <!-- Line 20 -->
+    <text x="70" y="490" class="line-number">20</text>
+    <text x="90" y="490" class="code-keyword">high_risk</text>
+    <text x="170" y="490" class="code"> {</text>
+
+    <!-- Line 21 -->
+    <text x="70" y="510" class="line-number">21</text>
+    <text x="110" y="510" class="code">  input.score >= </text>
+    <text x="250" y="510" class="code-number">70</text>
+
+    <!-- Line 22 -->
+    <text x="70" y="530" class="line-number">22</text>
+    <text x="90" y="530" class="code">}</text>
+
+    <!-- Line 23 (empty) -->
+    <text x="70" y="550" class="line-number">23</text>
+
+    <!-- Line 24 -->
+    <text x="70" y="570" class="line-number">24</text>
+    <text x="90" y="570" class="code-comment"># 角色检查辅助函数</text>
+
+    <!-- Line 25 -->
+    <text x="70" y="590" class="line-number">25</text>
+    <text x="90" y="590" class="code-function">roles_contains</text>
+    <text x="220" y="590" class="code">(r) {</text>
+  </g>
+
+  <!-- Feature Highlights -->
+  <g id="features" transform="translate(50, 620)">
+    <text x="0" y="0" class="label" font-weight="bold">策略特点:</text>
+    <text x="0" y="20" class="feature-text">✓ 默认拒绝策略 (default allow = false)</text>
+    <text x="0" y="40" class="feature-text">✓ 基于属性的访问控制 (角色 + 资源 + 操作 + 风险分数)</text>
+    <text x="0" y="60" class="feature-text">✓ 风险阈值集成 (score ≥ 70 自动拒绝)</text>
+
+    <text x="500" y="20" class="feature-text">✓ 声明式策略语言 (Rego)</text>
+    <text x="500" y="40" class="feature-text">✓ 可组合规则 (allow规则可叠加)</text>
+    <text x="500" y="60" class="feature-text">✓ 辅助函数支持 (roles_contains)</text>
+  </g>
+</svg>

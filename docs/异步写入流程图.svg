@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="serviceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="goroutineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#11998e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#38ef7d;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="dbGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="responseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.2"/>
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555"/>
+    </marker>
+    <marker id="arrowheadGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#27ae60"/>
+    </marker>
+    <marker id="arrowheadBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3498db"/>
+    </marker>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="900" height="600" fill="#f5f7fa"/>
+
+  <!-- 标题 -->
+  <text x="450" y="35" font-family="Microsoft YaHei, SimHei, sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#2c3e50">审计日志异步写入流程图</text>
+
+  <!-- 步骤1: HTTP请求 -->
+  <g transform="translate(50, 80)" filter="url(#shadow)">
+    <rect width="140" height="70" rx="10" fill="#3498db"/>
+    <text x="70" y="30" font-family="Microsoft YaHei, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">HTTP 请求</text>
+    <text x="70" y="50" font-family="Consolas, monospace" font-size="11" text-anchor="middle" fill="#ecf0f1">POST /score</text>
+  </g>
+
+  <!-- 箭头1 -->
+  <line x1="190" y1="115" x2="250" y2="115" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- 步骤2: scoreHandler -->
+  <g transform="translate(260, 70)" filter="url(#shadow)">
+    <rect width="180" height="90" rx="10" fill="url(#serviceGrad)"/>
+    <text x="90" y="25" font-family="Microsoft YaHei, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">scoreHandler</text>
+    <text x="90" y="45" font-family="Consolas, monospace" font-size="10" text-anchor="middle" fill="#ecf0f1">1. 解析请求JSON</text>
+    <text x="90" y="60" font-family="Consolas, monospace" font-size="10" text-anchor="middle" fill="#ecf0f1">2. 计算风险分数</text>
+    <text x="90" y="75" font-family="Consolas, monospace" font-size="10" text-anchor="middle" fill="#ecf0f1">3. 更新metrics</text>
+  </g>
+
+  <!-- 分支点 -->
+  <circle cx="530" cy="115" r="15" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+  <text x="530" y="120" font-family="sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">!</text>
+
+  <!-- 箭头到分支 -->
+  <line x1="440" y1="115" x2="512" y2="115" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- 主线程继续 - 返回响应 -->
+  <g transform="translate(600, 80)" filter="url(#shadow)">
+    <rect width="150" height="70" rx="10" fill="url(#responseGrad)"/>
+    <text x="75" y="28" font-family="Microsoft YaHei, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="white">立即返回响应</text>
+    <text x="75" y="48" font-family="Consolas, monospace" font-size="10" text-anchor="middle" fill="white">{"score": 45,</text>
+    <text x="75" y="62" font-family="Consolas, monospace" font-size="10" text-anchor="middle" fill="white"> "reasons": [...]}</text>
+  </g>
+
+  <!-- 箭头到响应 -->
+  <line x1="545" y1="115" x2="595" y2="115" stroke="#3498db" stroke-width="2" marker-end="url(#arrowheadBlue)"/>
+  <text x="570" y="105" font-family="Microsoft YaHei, sans-serif" font-size="10" text-anchor="middle" fill="#3498db">同步</text>
+
+  <!-- 客户端 -->
+  <g transform="translate(780, 80)" filter="url(#shadow)">
+    <rect width="90" height="70" rx="10" fill="#2ecc71"/>
+    <text x="45" y="30" font-family="Microsoft YaHei, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="white">客户端</text>
+    <text x="45" y="50" font-family="Consolas, monospace" font-size="10" text-anchor="middle" fill="white">收到响应</text>
+  </g>
+
+  <!-- 箭头到客户端 -->
+  <line x1="750" y1="115" x2="775" y2="115" stroke="#3498db" stroke-width="2" marker-end="url(#arrowheadBlue)"/>
+
+  <!-- 异步分支向下 -->
+  <path d="M 530 130 L 530 200" stroke="#27ae60" stroke-width="2" stroke-dasharray="8,4" marker-end="url(#arrowheadGreen)"/>
+  <text x="545" y="170" font-family="Microsoft YaHei, sans-serif" font-size="10" fill="#27ae60">异步</text>
+
+  <!-- Goroutine 启动 -->
+  <g transform="translate(430, 210)" filter="url(#shadow)">
+    <rect width="200" height="80" rx="10" fill="url(#goroutineGrad)"/>
+    <text x="100" y="25" font-family="Microsoft YaHei, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">go func() { ... }()</text>
+    <text x="100" y="45" font-family="Consolas, monospace" font-size="10" text-anchor="middle" fill="white">启动独立 Goroutine</text>
+    <text x="100" y="62" font-family="Consolas, monospace" font-size="10" text-anchor="middle" fill="white">不阻塞主请求处理</text>
+  </g>
+
+  <!-- 箭头到AuditLogger -->
+  <path d="M 530 290 L 530 330" stroke="#27ae60" stroke-width="2" stroke-dasharray="8,4" marker-end="url(#arrowheadGreen)"/>
+
+  <!-- AuditLogger.Log -->
+  <g transform="translate(400, 340)" filter="url(#shadow)">
+    <rect width="260" height="100" rx="10" fill="#9b59b6"/>
+    <text x="130" y="25" font-family="Microsoft YaHei, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">auditLogger.Log()</text>
+    <text x="130" y="48" font-family="Consolas, monospace" font-size="10" text-anchor="middle" fill="#ecf0f1">构建 AuditLog 结构体:</text>
+    <text x="130" y="63" font-family="Consolas, monospace" font-size="9" text-anchor="middle" fill="#ecf0f1">UserID, Action, Resource,</text>
+    <text x="130" y="78" font-family="Consolas, monospace" font-size="9" text-anchor="middle" fill="#ecf0f1">RiskScore, Decision, IP, Geo...</text>
+  </g>
+
+  <!-- 箭头到MySQL -->
+  <path d="M 530 440 L 530 480" stroke="#27ae60" stroke-width="2" stroke-dasharray="8,4" marker-end="url(#arrowheadGreen)"/>
+
+  <!-- MySQL 数据库 -->
+  <g transform="translate(380, 490)" filter="url(#shadow)">
+    <!-- 数据库图标 -->
+    <ellipse cx="150" cy="15" rx="100" ry="20" fill="url(#dbGrad)"/>
+    <rect x="50" y="15" width="200" height="60" fill="url(#dbGrad)"/>
+    <ellipse cx="150" cy="75" rx="100" ry="20" fill="#f5576c"/>
+    <text x="150" y="50" font-family="Microsoft YaHei, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="white">MySQL - audit_logs</text>
+  </g>
+
+  <!-- 代码示例框 -->
+  <g transform="translate(50, 220)">
+    <rect width="320" height="200" rx="8" fill="#2d2d2d" stroke="#444" stroke-width="1"/>
+    <rect width="320" height="25" rx="8" fill="#3d3d3d"/>
+    <rect y="17" width="320" height="8" fill="#3d3d3d"/>
+    <circle cx="15" cy="12" r="5" fill="#ff5f56"/>
+    <circle cx="32" cy="12" r="5" fill="#ffbd2e"/>
+    <circle cx="49" cy="12" r="5" fill="#27ca40"/>
+    <text x="160" y="17" font-family="Consolas, monospace" font-size="10" text-anchor="middle" fill="#aaa">main.go - scoreHandler</text>
+
+    <text x="15" y="50" font-family="Consolas, monospace" font-size="10" fill="#608b4e">// 异步写入审计日志</text>
+    <text x="15" y="68" font-family="Consolas, monospace" font-size="10" fill="#c586c0">if</text>
+    <text x="30" y="68" font-family="Consolas, monospace" font-size="10" fill="#9cdcfe">auditLogger</text>
+    <text x="110" y="68" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">!=</text>
+    <text x="125" y="68" font-family="Consolas, monospace" font-size="10" fill="#569cd6">nil</text>
+    <text x="145" y="68" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">{</text>
+
+    <text x="25" y="86" font-family="Consolas, monospace" font-size="10" fill="#c586c0">go</text>
+    <text x="45" y="86" font-family="Consolas, monospace" font-size="10" fill="#dcdcaa">func</text>
+    <text x="75" y="86" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">() {</text>
+
+    <text x="35" y="104" font-family="Consolas, monospace" font-size="10" fill="#9cdcfe">decision</text>
+    <text x="95" y="104" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">:=</text>
+    <text x="115" y="104" font-family="Consolas, monospace" font-size="10" fill="#ce9178">"allow"</text>
+
+    <text x="35" y="122" font-family="Consolas, monospace" font-size="10" fill="#c586c0">if</text>
+    <text x="55" y="122" font-family="Consolas, monospace" font-size="10" fill="#9cdcfe">score</text>
+    <text x="90" y="122" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">&gt;=</text>
+    <text x="110" y="122" font-family="Consolas, monospace" font-size="10" fill="#b5cea8">70</text>
+    <text x="130" y="122" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">{</text>
+    <text x="140" y="122" font-family="Consolas, monospace" font-size="10" fill="#9cdcfe">decision</text>
+    <text x="200" y="122" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">=</text>
+    <text x="210" y="122" font-family="Consolas, monospace" font-size="10" fill="#ce9178">"deny"</text>
+    <text x="255" y="122" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">}</text>
+
+    <text x="35" y="140" font-family="Consolas, monospace" font-size="10" fill="#9cdcfe">_</text>
+    <text x="45" y="140" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">=</text>
+    <text x="55" y="140" font-family="Consolas, monospace" font-size="10" fill="#9cdcfe">auditLogger</text>
+    <text x="130" y="140" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">.</text>
+    <text x="135" y="140" font-family="Consolas, monospace" font-size="10" fill="#dcdcaa">Log</text>
+    <text x="155" y="140" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">(</text>
+    <text x="160" y="140" font-family="Consolas, monospace" font-size="10" fill="#4ec9b0">AuditLog</text>
+    <text x="220" y="140" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">{...})</text>
+
+    <text x="25" y="158" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">}()</text>
+    <text x="15" y="176" font-family="Consolas, monospace" font-size="10" fill="#d4d4d4">}</text>
+  </g>
+
+  <!-- 优势说明框 -->
+  <g transform="translate(700, 220)">
+    <rect width="180" height="200" rx="8" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1"/>
+    <text x="90" y="25" font-family="Microsoft YaHei, SimHei, sans-serif" font-size="13" font-weight="bold" text-anchor="middle" fill="#2c3e50">异步写入优势</text>
+
+    <g transform="translate(15, 45)">
+      <circle cx="8" cy="8" r="8" fill="#27ae60"/>
+      <text x="8" y="12" font-family="sans-serif" font-size="10" text-anchor="middle" fill="white">1</text>
+      <text x="25" y="12" font-family="Microsoft YaHei, sans-serif" font-size="11" fill="#333">不阻塞主请求</text>
+    </g>
+
+    <g transform="translate(15, 75)">
+      <circle cx="8" cy="8" r="8" fill="#3498db"/>
+      <text x="8" y="12" font-family="sans-serif" font-size="10" text-anchor="middle" fill="white">2</text>
+      <text x="25" y="12" font-family="Microsoft YaHei, sans-serif" font-size="11" fill="#333">响应延迟更低</text>
+    </g>
+
+    <g transform="translate(15, 105)">
+      <circle cx="8" cy="8" r="8" fill="#9b59b6"/>
+      <text x="8" y="12" font-family="sans-serif" font-size="10" text-anchor="middle" fill="white">3</text>
+      <text x="25" y="12" font-family="Microsoft YaHei, sans-serif" font-size="11" fill="#333">DB故障不影响</text>
+      <text x="25" y="26" font-family="Microsoft YaHei, sans-serif" font-size="11" fill="#333">核心业务</text>
+    </g>
+
+    <g transform="translate(15, 145)">
+      <circle cx="8" cy="8" r="8" fill="#e74c3c"/>
+      <text x="8" y="12" font-family="sans-serif" font-size="10" text-anchor="middle" fill="white">4</text>
+      <text x="25" y="12" font-family="Microsoft YaHei, sans-serif" font-size="11" fill="#333">Go协程轻量级</text>
+      <text x="25" y="26" font-family="Microsoft YaHei, sans-serif" font-size="11" fill="#333">高并发支持</text>
+    </g>
+  </g>
+
+  <!-- 时间线说明 -->
+  <g transform="translate(50, 480)">
+    <rect width="300" height="90" rx="6" fill="#fff" stroke="#ddd" stroke-width="1"/>
+    <text x="150" y="20" font-family="Microsoft YaHei, SimHei, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#2c3e50">时序对比</text>
+
+    <line x1="20" y1="45" x2="280" y2="45" stroke="#3498db" stroke-width="3"/>
+    <text x="20" y="60" font-family="Microsoft YaHei, sans-serif" font-size="9" fill="#3498db">同步路径: 请求 → 计算 → 响应 (~5ms)</text>
+
+    <line x1="20" y1="75" x2="280" y2="75" stroke="#27ae60" stroke-width="3" stroke-dasharray="8,4"/>
+    <text x="20" y="88" font-family="Microsoft YaHei, sans-serif" font-size="9" fill="#27ae60">异步路径: Goroutine → DB写入 (后台执行)</text>
+  </g>
+</svg>

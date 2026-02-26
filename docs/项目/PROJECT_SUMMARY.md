@@ -1,4 +1,4 @@
-# 零信任 IAM 毕设 - 项目总结
+﻿# 零信任 IAM 毕设 - 项目总结
 
 ## 项目概述
 
@@ -74,8 +74,8 @@ CentOS 9 虚拟机
 项目根目录
 ├── README.md                    # 项目概述
 ├── QUICK_START.md              # 快速开始指南
-├── DEPLOYMENT.md               # 详细部署指南
-├── PROJECT_SUMMARY.md          # 本文件
+├── USAGE.md                    # 详细部署指南
+├── TEST_API.md                 # API 测试示例
 │
 ├── ansible/                    # Ansible 自动化部署
 │   ├── inventory/hosts.ini     # 主机清单（需要修改）
@@ -96,10 +96,14 @@ CentOS 9 虚拟机
 ├── scripts/                    # 脚本
 │   └── init_centos9.sh         # CentOS 初始化脚本
 │
-└── docs/零信任IAM/             # 文档
-    └── TASK_零信任IAM.md       # 功能清单
+└── docs/                       # 文档
+    ├── INDEX.md                # 文档索引
+    ├── 项目/                   # 项目总结与改进
+    ├── 论文/                   # 论文相关
+    ├── 答辩/                   # 答辩相关
+    └── 零信任IAM/              # 功能清单
+        └── TASK_零信任IAM.md
 ```
-
 ## 部署流程
 
 ### 第 1 步：准备配置
@@ -166,6 +170,10 @@ kubectl -n security get all
 
 如有问题，请参考：
 - QUICK_START.md - 快速开始
-- DEPLOYMENT.md - 详细部署指南
+- USAGE.md - 详细部署指南
 - 各组件官方文档
+
+
+
+
 

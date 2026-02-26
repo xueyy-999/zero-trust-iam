@@ -1,0 +1,241 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1100">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #1e293b; }
+      .subtitle { font: 16px sans-serif; fill: #475569; }
+      .scenario-title { font: bold 16px sans-serif; fill: #1e293b; }
+      .field-label { font: 12px sans-serif; fill: #64748b; font-weight: bold; }
+      .field-value { font: 12px sans-serif; fill: #334155; }
+      .result-title { font: bold 18px sans-serif; }
+      .result-text { font: 14px sans-serif; }
+      .label { font: 12px sans-serif; fill: #64748b; }
+      .scenario-box { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 2; rx: 8; }
+      .input-section { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1; rx: 6; }
+      .score-section { fill: #fef3c7; stroke: #f59e0b; stroke-width: 1; rx: 6; }
+      .result-allow { fill: #d1fae5; stroke: #10b981; stroke-width: 3; rx: 8; }
+      .result-deny { fill: #fee2e2; stroke: #ef4444; stroke-width: 3; rx: 8; }
+      .icon-allow { fill: #10b981; }
+      .icon-deny { fill: #ef4444; }
+      .divider { stroke: #e2e8f0; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="700" y="40" text-anchor="middle" class="title">OPA 授权决策 - 不同场景对比</text>
+  <text x="700" y="65" text-anchor="middle" class="subtitle">Authorization Decision Comparison Across Different Scenarios</text>
+
+  <!-- Scenario 1: Low Risk - Allow -->
+  <g id="scenario1">
+    <rect x="50" y="100" width="600" height="420" class="scenario-box"/>
+    <text x="350" y="130" text-anchor="middle" class="scenario-title">场景1: 普通用户查询订单 (低风险)</text>
+
+    <!-- Input Section -->
+    <rect x="70" y="150" width="560" height="140" class="input-section"/>
+    <text x="90" y="175" class="field-label">输入参数:</text>
+
+    <text x="110" y="200" class="field-label">• userId:</text>
+    <text x="200" y="200" class="field-value">"user123"</text>
+
+    <text x="110" y="220" class="field-label">• roles:</text>
+    <text x="200" y="220" class="field-value">["user"]</text>
+
+    <text x="110" y="240" class="field-label">• resource:</text>
+    <text x="200" y="240" class="field-value">"orders"</text>
+
+    <text x="110" y="260" class="field-label">• action:</text>
+    <text x="200" y="260" class="field-value">"read"</text>
+
+    <text x="350" y="200" class="field-label">• ip:</text>
+    <text x="400" y="200" class="field-value">"192.168.1.100"</text>
+
+    <text x="350" y="220" class="field-label">• geo:</text>
+    <text x="400" y="220" class="field-value">"CN"</text>
+
+    <text x="350" y="240" class="field-label">• userAgent:</text>
+    <text x="450" y="240" class="field-value">"Mozilla/5.0"</text>
+
+    <text x="350" y="260" class="field-label">• time:</text>
+    <text x="400" y="260" class="field-value">"10:00 (工作时间)"</text>
+
+    <text x="110" y="280" class="field-label">• failedLoginCount:</text>
+    <text x="260" y="280" class="field-value">0</text>
+
+    <!-- Score Section -->
+    <rect x="70" y="310" width="560" height="80" class="score-section"/>
+    <text x="90" y="335" class="field-label">风险评分结果:</text>
+    <text x="110" y="360" class="field-value">• 风险分数: 0</text>
+    <text x="110" y="380" class="field-value">• 风险因素: [] (无风险因素)</text>
+
+    <!-- Decision Result -->
+    <rect x="70" y="410" width="560" height="90" class="result-allow"/>
+    <circle cx="120" cy="455" r="20" class="icon-allow"/>
+    <text x="120" y="463" text-anchor="middle" class="result-title" fill="white" font-size="24">✓</text>
+    <text x="160" y="445" class="result-title" fill="#10b981">ACCESS GRANTED</text>
+    <text x="160" y="470" class="result-text" fill="#059669">允许访问 - 匹配规则: allow (read orders, low risk)</text>
+    <text x="160" y="490" class="result-text" fill="#059669">OPA决策: allow = true</text>
+  </g>
+
+  <!-- Scenario 2: Medium Risk - Allow with Warning -->
+  <g id="scenario2">
+    <rect x="700" y="100" width="650" height="420" class="scenario-box"/>
+    <text x="1025" y="130" text-anchor="middle" class="scenario-title">场景2: 用户异地访问 (中风险)</text>
+
+    <!-- Input Section -->
+    <rect x="720" y="150" width="610" height="140" class="input-section"/>
+    <text x="740" y="175" class="field-label">输入参数:</text>
+
+    <text x="760" y="200" class="field-label">• userId:</text>
+    <text x="850" y="200" class="field-value">"user456"</text>
+
+    <text x="760" y="220" class="field-label">• roles:</text>
+    <text x="850" y="220" class="field-value">["user"]</text>
+
+    <text x="760" y="240" class="field-label">• resource:</text>
+    <text x="850" y="240" class="field-value">"orders"</text>
+
+    <text x="760" y="260" class="field-label">• action:</text>
+    <text x="850" y="260" class="field-value">"read"</text>
+
+    <text x="1000" y="200" class="field-label">• ip:</text>
+    <text x="1050" y="200" class="field-value">"1.2.3.4"</text>
+
+    <text x="1000" y="220" class="field-label">• geo:</text>
+    <text x="1050" y="220" class="field-value">"US" (异常)</text>
+
+    <text x="1000" y="240" class="field-label">• userAgent:</text>
+    <text x="1100" y="240" class="field-value">"Mozilla/5.0"</text>
+
+    <text x="1000" y="260" class="field-label">• time:</text>
+    <text x="1050" y="260" class="field-value">"14:00"</text>
+
+    <text x="760" y="280" class="field-label">• failedLoginCount:</text>
+    <text x="910" y="280" class="field-value">1</text>
+
+    <!-- Score Section -->
+    <rect x="720" y="310" width="610" height="80" class="score-section"/>
+    <text x="740" y="335" class="field-label">风险评分结果:</text>
+    <text x="760" y="360" class="field-value">• 风险分数: 20</text>
+    <text x="760" y="380" class="field-value">• 风险因素: ["geo_anomaly"] (地理位置异常)</text>
+
+    <!-- Decision Result -->
+    <rect x="720" y="410" width="610" height="90" class="result-allow"/>
+    <circle cx="770" cy="455" r="20" class="icon-allow"/>
+    <text x="770" y="463" text-anchor="middle" class="result-title" fill="white" font-size="24">✓</text>
+    <text x="810" y="445" class="result-title" fill="#10b981">ACCESS GRANTED (中风险警告)</text>
+    <text x="810" y="470" class="result-text" fill="#059669">允许访问 - 分数未达拒绝阈值(70)</text>
+    <text x="810" y="490" class="result-text" fill="#f59e0b">建议: 可启用二次验证或额外监控</text>
+  </g>
+
+  <!-- Scenario 3: High Risk - Deny -->
+  <g id="scenario3">
+    <rect x="50" y="560" width="600" height="460" class="scenario-box"/>
+    <text x="350" y="590" text-anchor="middle" class="scenario-title">场景3: 管理员夜间异地操作 (高风险)</text>
+
+    <!-- Input Section -->
+    <rect x="70" y="610" width="560" height="160" class="input-section"/>
+    <text x="90" y="635" class="field-label">输入参数:</text>
+
+    <text x="110" y="660" class="field-label">• userId:</text>
+    <text x="200" y="660" class="field-value">"admin999"</text>
+
+    <text x="110" y="680" class="field-label">• roles:</text>
+    <text x="200" y="680" class="field-value">["admin"]</text>
+
+    <text x="110" y="700" class="field-label">• resource:</text>
+    <text x="200" y="700" class="field-value">"database"</text>
+
+    <text x="110" y="720" class="field-label">• action:</text>
+    <text x="200" y="720" class="field-value">"admin"</text>
+
+    <text x="110" y="740" class="field-label">• failedLoginCount:</text>
+    <text x="260" y="740" class="field-value">5 (异常)</text>
+
+    <text x="350" y="660" class="field-label">• ip:</text>
+    <text x="400" y="660" class="field-value">"1.2.3.4"</text>
+
+    <text x="350" y="680" class="field-label">• geo:</text>
+    <text x="400" y="680" class="field-value">"US" (异常)</text>
+
+    <text x="350" y="700" class="field-label">• userAgent:</text>
+    <text x="450" y="700" class="field-value">"" (缺失)</text>
+
+    <text x="350" y="720" class="field-label">• time:</text>
+    <text x="400" y="720" class="field-value">"23:30 (夜间)"</text>
+
+    <!-- Score Section -->
+    <rect x="70" y="790" width="560" height="100" class="score-section"/>
+    <text x="90" y="815" class="field-label">风险评分结果:</text>
+    <text x="110" y="840" class="field-value">• 风险分数: 100 (满分)</text>
+    <text x="110" y="860" class="field-value">• 风险因素: ["many_failed_logins", "geo_anomaly",</text>
+    <text x="130" y="880" class="field-value">"privileged_action", "missing_ua", "night_time"]</text>
+
+    <!-- Decision Result -->
+    <rect x="70" y="910" width="560" height="90" class="result-deny"/>
+    <circle cx="120" cy="955" r="20" class="icon-deny"/>
+    <text x="120" y="963" text-anchor="middle" class="result-title" fill="white" font-size="24">✗</text>
+    <text x="160" y="945" class="result-title" fill="#ef4444">ACCESS DENIED</text>
+    <text x="160" y="970" class="result-text" fill="#dc2626">拒绝访问 - 风险分数≥70 触发high_risk规则</text>
+    <text x="160" y="990" class="result-text" fill="#dc2626">OPA决策: allow = false (所有规则均不匹配)</text>
+  </g>
+
+  <!-- Scenario 4: No Permission - Deny -->
+  <g id="scenario4">
+    <rect x="700" y="560" width="650" height="460" class="scenario-box"/>
+    <text x="1025" y="590" text-anchor="middle" class="scenario-title">场景4: 普通用户尝试管理员操作 (无权限)</text>
+
+    <!-- Input Section -->
+    <rect x="720" y="610" width="610" height="160" class="input-section"/>
+    <text x="740" y="635" class="field-label">输入参数:</text>
+
+    <text x="760" y="660" class="field-label">• userId:</text>
+    <text x="850" y="660" class="field-value">"user789"</text>
+
+    <text x="760" y="680" class="field-label">• roles:</text>
+    <text x="850" y="680" class="field-value">["user"] (非admin)</text>
+
+    <text x="760" y="700" class="field-label">• resource:</text>
+    <text x="850" y="700" class="field-value">"users"</text>
+
+    <text x="760" y="720" class="field-label">• action:</text>
+    <text x="850" y="720" class="field-value">"admin" (需要admin权限)</text>
+
+    <text x="760" y="740" class="field-label">• failedLoginCount:</text>
+    <text x="910" y="740" class="field-value">0</text>
+
+    <text x="1000" y="660" class="field-label">• ip:</text>
+    <text x="1050" y="660" class="field-value">"192.168.1.101"</text>
+
+    <text x="1000" y="680" class="field-label">• geo:</text>
+    <text x="1050" y="680" class="field-value">"CN"</text>
+
+    <text x="1000" y="700" class="field-label">• userAgent:</text>
+    <text x="1100" y="700" class="field-value">"Mozilla/5.0"</text>
+
+    <text x="1000" y="720" class="field-label">• time:</text>
+    <text x="1050" y="720" class="field-value">"14:00"</text>
+
+    <!-- Score Section -->
+    <rect x="720" y="790" width="610" height="100" class="score-section"/>
+    <text x="740" y="815" class="field-label">风险评分结果:</text>
+    <text x="760" y="840" class="field-value">• 风险分数: 0</text>
+    <text x="760" y="860" class="field-value">• 风险因素: [] (无风险因素)</text>
+    <text x="760" y="880" class="field-value">• 注: 虽然风险低，但缺少必要权限</text>
+
+    <!-- Decision Result -->
+    <rect x="720" y="910" width="610" height="90" class="result-deny"/>
+    <circle cx="770" cy="955" r="20" class="icon-deny"/>
+    <text x="770" y="963" text-anchor="middle" class="result-title" fill="white" font-size="24">✗</text>
+    <text x="810" y="945" class="result-title" fill="#ef4444">ACCESS DENIED</text>
+    <text x="810" y="970" class="result-text" fill="#dc2626">拒绝访问 - 不匹配任何allow规则</text>
+    <text x="810" y="990" class="result-text" fill="#dc2626">原因: 用户角色不包含"admin"，无法执行admin操作</text>
+  </g>
+
+  <!-- Summary Table -->
+  <g id="summary" transform="translate(50, 1040)">
+    <text x="0" y="0" class="label" font-weight="bold" font-size="14">决策总结:</text>
+    <text x="0" y="25" class="label">场景1: ✓ 允许 - 低风险 + 匹配read规则</text>
+    <text x="350" y="25" class="label">场景2: ✓ 允许 - 中风险(20分) + 匹配read规则</text>
+    <text x="750" y="25" class="label">场景3: ✗ 拒绝 - 高风险(100分) 触发阻断</text>
+    <text x="1100" y="25" class="label">场景4: ✗ 拒绝 - 权限不足</text>
+  </g>
+</svg>
